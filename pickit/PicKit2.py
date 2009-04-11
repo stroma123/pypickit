@@ -401,7 +401,7 @@ class PicKit2():
 		self.__transport.write((PicKit2.CMD_UPLOAD_DATA_NOLEN, ))
 
     def EnterUartMode(self, baudrate):
-	"""Enter UART mode - lines will work as a serial UART, data will be automatically readfrom/writtento the writebuffer/readbuffer."""
+	"""Enter UART mode - lines will work as a serial UART with data format 8N1. Data will be automatically readfrom/writtento the writebuffer/readbuffer."""
 
 	self.__checkmode(('NORMAL', ))
 	
