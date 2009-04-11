@@ -2,8 +2,8 @@
 
 
 There are three classes in this library:
-<table>
-<tr><td>*!PicKit2LibUsbTransport*</td><td>This encapsulates all the libusb-specific code. Theoretically it would be possible to support a different USB library system by reimplementing this class.</td></tr>
-<tr><td>*!PicKit2*</td><td>The main pickit API for executing immediate operations.</td></tr>
-<tr><td>*!PicKit2ScriptBuilder*</td><td>The !PicKit firmware actually implements a small virtual machine; this class allows scripts for this VM to be conveniently built.</td></tr>
-</table>
+    <table>
+    <tr><td>*!PicKit2LibUsbTransport*</td><td>This encapsulates all the libusb-specific code. Theoretically it would be possible to support a different USB library system by reimplementing this class.</td></tr>
+    <tr><td>*!PicKit2*</td><td>The main pickit API for executing immediate operations.</td></tr>
+    <tr><td>*!PicKit2ScriptBuilder*</td><td>The !PicKit firmware actually implements a small virtual machine; this class allows scripts for this VM to be conveniently built.</td></tr>
+    </table>
