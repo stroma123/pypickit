@@ -1,13 +1,7 @@
 #summary PicKit support library.
 
-= Introduction =
 
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+There are three classes in this library:
+   * *PicKit2LibUsbTransport*. This encapsulates all the libusb-specific code. Theoretically it would be possible to support a different USB library system by reimplementing this class.
+   * *PicKit2*. The main pickit API for executing immediate operations.
+   * *PicKit2ScriptBuilder*. The PicKit firmware actually implements a small virtual machine; this class allows scripts for this VM to be conveniently built.
