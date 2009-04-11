@@ -1,6 +1,6 @@
 #summary Support utilities library.
 
     <table>
-    <tr valign="top"><td>*IntelHex*</td><td>Parser for Intel Hex format binary files.</td></tr>
-    <tr valign="top"><td>*SpiUtils*</td><td>A few utilities for communicating with SPI devices.</td></tr>
+    <tr valign="top"><td>*!IntelHex*</td><td>Parser for Intel Hex format binary files.</td></tr>
+    <tr valign="top"><td>*!SpiUtils*</td><td>A few utilities for communicating with SPI devices.</td></tr>
     </table>
