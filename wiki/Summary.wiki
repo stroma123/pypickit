@@ -6,7 +6,7 @@ This project provides a collection of utilities for talking to [http://www.micro
 
 It also has interface code supporting SPI Flash devices, [http://www.csr.com Cambridge Silicon Radio] Bluetooth devices, and [http://www.emc.com.tw Elantech] EKT8210 touchpads.
 
-It requires the pyusb python libusb support available from http://pyusb.berlios.de/
+It requires the pyusb python libusb support available from http://pyusb.berlios.de/ and the pyserial python serial support available from http://pyserial.wiki.sourceforge.net/pySerial.
 
 Currently only the [http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en023805 PicKit2] is supported.
 
