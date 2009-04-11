@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This project provides a collection of utilities for talking to [http://www.microchip.com Microchip] PicKit ICD programming devices from python.
+This project provides a collection of utilities for talking to [http://www.microchip.com Microchip] !PicKit ICD programming devices from python.
 
 It also has interface code supporting SPI Flash devices, [http://www.csr.com CSR] Bluetooth devices, and [http://www.emc.com.tw Elantech] EKT8210 touchpads.
 
