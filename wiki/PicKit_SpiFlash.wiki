@@ -1,4 +1,4 @@
-#summary Description of the Spi Flash support library
+#summary The Spi Flash support library
 
 = Introduction =
 
