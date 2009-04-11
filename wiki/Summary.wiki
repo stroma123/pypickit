@@ -17,7 +17,7 @@ The directory structure is as follows:
 
     <table>
     <tr><td>*/*</td><td>[CommandLineApps Command line programs.]</td></tr>
-    <tr><td>*/pickit*</td><td>[PicKit Interface code to the PicKit itself.]</td></tr>
+    <tr><td>*/pickit*</td><td>[PicKit Core interface code to the PicKit itself.]</td></tr>
     <tr><td>*/pickit/csr*</td><td>[PicKit_Csr Cambridge Silicon Radio Bluetooth chips support.]</td></tr>
     <tr><td>*/pickit/elantech*</td><td>[PicKit_Elantech Elantech Touchpad support.]</td></tr>
     <tr><td>*/pickit/spiflash*</td><td>[PicKit_SpiFlash SPI Flash chip support.]</td></tr>
