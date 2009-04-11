@@ -1,4 +1,4 @@
-#summary Elantech support library.
+#summary The Elantech support library.
 
 = Introduction =
 
