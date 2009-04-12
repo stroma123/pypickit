@@ -14,7 +14,7 @@ _[http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.svg svg]_
 ||SW1||Mouse button 1||
 ||SW2||Mouse button 2||
 ||SW3||Mouse button 3||
-||INT#||Assrted by touchpad to indicate it has data ready to transmit||
+||INT#||Asserted by touchpad to indicate it has data ready to transmit||
 ||SDI_RX||SPI in or serial RX pin||
 ||SDO_TX||SPI out or serial TX pin||
 ||SCK||SPI clock, or wired to GND for serial mode||
