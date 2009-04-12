@@ -4,13 +4,10 @@
 import sys
 import traceback
 import time
-import usb
 from pickit.PicKit2LibUsbTransport import PicKit2LibUsbTransport
 from pickit.PicKit2 import PicKit2
 from pickit.PicKit2ScriptBuilder import PicKit2ScriptBuilder
 from pickit.elantech.EKT8210 import EKT8210
-import pickit.utils.SpiUtils
-import serial
 
 
 pickits = PicKit2LibUsbTransport.findpickits()
@@ -21,24 +18,38 @@ if len(pickits) == 0:
 # Setup the pickit 
 usbtransport = PicKit2LibUsbTransport(pickits[0])
 pickit = PicKit2(usbtransport)
-pickit.ClearReadBuffer()
+elantech = EKT8210(pickit)
 pickit.ClearWriteBuffer()
 pickit.ClearScriptBuffer()
 
-# Open the serial port for data
-sport = serial.Serial("/dev/ttyUSB0", 9600)
-ekt8210 = EKT8210(sport)
+# Power the touchpad down
+s = PicKit2ScriptBuilder()
+s.VddVoltageOff()
+s.VddGndOff()
+s.VppVoltageOff()
+s.VppGndOff()
+pickit.RunScriptImmediate(s)
 
-# setup the pickit to power the elantech chip
+# Enter UART mode
+pickit.EnterUartMode(9600)
+pickit.ClearReadBuffer()
+
+# Set the voltages
 pickit.SetVppVoltage(3.3, 0.1)
 pickit.SetVddVoltage(3.3, 0.1)
-s = PicKit2ScriptBuilder()
-s += SpiUtils.SetupExternalPowerScript()
-s.VddVoltageOn()
-s.VppVoltageOn()
 
-pickit.RunScriptImmediate(SpiUtils.ShutdownScript())
+# Setup the output configuration
+s = PicKit2ScriptBuilder()
+s.SetProgrammingSpeed(0)
+s.ConfigureIcspPins(1,0,0,0) # SDO_TX + SDI_RX
+s.ConfigureAuxPin(1,0) # AUX as input
+s.VddGndOff()
+s.VddVoltageOn()
+s.VppPwmOff()
+s.VppGndOff()
+s.VppVoltageOff()
 pickit.RunScriptImmediate(s)
+
 
 
 
@@ -114,5 +125,12 @@ endtime = time.time()
  
 #  else:
 #    print "Unknown packet type %02x" % pkttype
- 
-pickit.RunScriptImmediate(SpiUtils.ShutdownScript())
+
+
+s = PicKit2ScriptBuilder()
+s.VddVoltageOff()
+s.VddGndOff()
+s.VppVoltageOff()
+s.VppGndOff()
+pickit.RunScriptImmediate(s)
+pickit.ExitUartMode()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import serial
 
 class EKT8210():
+    """Support for communicating with an Elantech EKT8210 based touchpad in serial mode."""
 
     ETECH_PKT_RELRPT		= 0x50
     ETECH_PKT_ABSRPT		= 0x51
@@ -28,18 +28,20 @@ class EKT8210():
     ETECH_REG_FIRMWAREID	= 0x0f
 
     
-    def __init__(self, sport):
+    def __init__(self, pickit):
+	"""Constructor.
 
-	self.__sport = sport
+	args:
+	pickit -- pickit the touchpad is attached to - baud rate 9600."""
 
+	self.__pickit = pickit
+	
     def ReadNextPacket(self, timeout = None):
-	self.__sport.timeout = timeout
-	pkttype = self.__sport.read(1)
-	self.__sport.timeout = None
-
+	# Read first byte of packet
+	pkttype = self.__pickit.BufferedReadData(1, timeout)
 	if len(pkttype) == 0:
-	    return () 
-	pkttype = ord(pkttype)
+	    return ()
+	pkttype = ord(pkttype[0])
 	
 	length = 0
 	if pkttype == ETECH_PKT_RELRPT:
@@ -53,14 +55,14 @@ class EKT8210():
 	else:
 	    raise Exception("Unknown packet type 0x%02x" % pkttype)
 
-	data = (pkttype, ) + tuple([ord(x) for x in self.__sport.read(length)])
+	data = (pkttype, ) + tuple([ord(x) for x in self.__pickit.BufferedReadData(length)])
 	if (data[length] & 1) != 1:
 	    raise Exception("Bad sync bit")
 	    
 	return data
 
     def ReadRegister(self, reg):
-	self.__sport.write("".join([chr(x) for x in (ETECH_PKT_READREG_REQ, reg << 4, 0x00, 0x01)]))
+	self.__pickit.WriteData("".join([chr(x) for x in (ETECH_PKT_READREG_REQ, reg << 4, 0x00, 0x01)]))
 	
 	# Wait for appropriate response
 	while True:
@@ -75,7 +77,7 @@ class EKT8210():
     def WriteRegister(self, reg, value):
 	reg = reg & 0xf
 	value = value & 0xffff  
-	self.__sport.write("".join([chr(x) for x in (ETECH_PKT_WRITEREG, (reg << 4 | value >> 12) & 0xff, (value >> 4) & 0xff, (value << 4 | 0x01) & 0xff)]))
+	self.__pickit.WriteData("".join([chr(x) for x in (ETECH_PKT_WRITEREG, (reg << 4 | value >> 12) & 0xff, (value >> 4) & 0xff, (value << 4 | 0x01) & 0xff)]))
 
     def GetFirmwareVersion(self):
 	tmp = self.ReadRegister(self.ETECH_REG_FIRMWAREVERSION)
