@@ -102,6 +102,7 @@ class PicKit2():
 	transport -- transport instance to use."""
 	self.__transport = transport
 	self.__mode = self.GetFirmwareVersion()[0]
+	self.__rxbuf = ()
 
     def GetFirmwareVersion(self):
 	"""Get firmware version of PIC and determine normal or bootloader mode."""
@@ -370,6 +371,7 @@ class PicKit2():
 	self.__checkmode(('NORMAL', 'PK2GOLEARN'))
 
 	self.__transport.write((PicKit2.CMD_CLR_UPLOAD_BUFFER, ))
+	self.__rxbuf = ()
 
     def CopyRamToReadBuffer(self, srcaddr):
 	"""Copy 128 bytes of pickit RAM starting at srcaddr to the readbuffer."""
@@ -399,6 +401,32 @@ class PicKit2():
 		self.__transport.write((PicKit2.CMD_UPLOAD_DATA, ))
 	    else:
 		self.__transport.write((PicKit2.CMD_UPLOAD_DATA_NOLEN, ))
+
+    def BufferedReadData(self, count = 1, timeout = None):
+	"""Convenience method wrapping ReadData which reads exactly count bytes of data 
+	with an optional timeout (in standard python float time seconds).
+	
+	Returns empty list if timeout expired."""
+
+	# accumulate data in the buffer until we have enough
+	start = time.time()
+	while len(self.__rxbuf) < count:
+	    if (timeout != None) and ((start + timeout) > time.time()):
+		return ()
+
+	    # Read data
+	    tmp = self.__pickit.ReadData()
+
+	    # Accumulate it, or delay for 1ms
+	    if len(tmp) > 0:
+		self.__rxbuf += tmp
+	    else:
+		time.sleep(0.0001)	    
+
+	# return requested number of data bytes from buffer
+	tmp = self.__rxbuf[0:count]
+	self.__rxbuf = self.__rxbuf[count:]
+	return tmp
 
     def EnterUartMode(self, baudrate):
 	"""Enter UART mode - lines will work as a serial UART with data format 8N1. Data will be automatically readfrom/writtento the writebuffer/readbuffer."""
