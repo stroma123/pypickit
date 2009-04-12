@@ -5,6 +5,7 @@ Currently there is only support for the Elantech eKT8210 touchpad in serial mode
 This touchpad can operate in either serial (9600 8N1) or SPI mode (where the touchpad is an SPI master and generates a clock signal). Serial mode is selected by wiring the SS# and SCLK to ground.
 
 Example pickit wiring diagram: 
+
 [http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.svg   http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.png]
 
 ||Vdd||3.3v supply||
