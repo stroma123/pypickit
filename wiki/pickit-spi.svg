@@ -15,7 +15,7 @@
    inkscape:version="0.46"
    sodipodi:docname="pickit-spi.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
-   inkscape:export-filename="/home/adq/Desktop/pickit-spi.png"
+   inkscape:export-filename="/home/adq/dev/pypickit-wiki/pickit-spi.png"
    inkscape:export-xdpi="199.91585"
    inkscape:export-ydpi="199.91585">
   <sodipodi:namedview
@@ -30,10 +30,10 @@
      inkscape:pageshadow="2"
      inkscape:zoom="2.8"
      inkscape:cx="117.20932"
-     inkscape:cy="620.0217"
+     inkscape:cy="562.87884"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
-     showgrid="false"
+     showgrid="true"
      inkscape:window-width="1430"
      inkscape:window-height="870"
      inkscape:window-x="0"
@@ -580,7 +580,7 @@
            sodipodi:role="line"
            id="tspan6478"
            x="234.86047"
-           y="409.70459">Vdd</tspan></text>
+           y="409.70459">CS#</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -590,7 +590,7 @@
            sodipodi:role="line"
            id="tspan6482"
            x="234.57043"
-           y="419.63272">GND</tspan></text>
+           y="419.63272">Vdd</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -600,7 +600,7 @@
            sodipodi:role="line"
            id="tspan6486"
            x="234.51184"
-           y="429.61362">CS#</tspan></text>
+           y="429.61362">GND</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -620,7 +620,7 @@
            sodipodi:role="line"
            id="tspan6494"
            x="234.51184"
-           y="449.57538">MOSI</tspan></text>
+           y="449.57538">SCLK</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:6px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -630,7 +630,7 @@
            sodipodi:role="line"
            id="tspan6498"
            x="234.31848"
-           y="459.5592">SCLK</tspan></text>
+           y="459.5592">MOSI</tspan></text>
     </g>
     <g
        id="g7754">
@@ -813,24 +813,24 @@
     </g>
     <path
        id="path7841"
-       d="M 165,437.36218 L 180,437.36218 L 180,427.36218 L 215,427.36218"
+       d="M 165,437.36218 L 215,437.36218"
        style="stroke-linejoin:miter;marker-end:url(#DotMH);stroke-opacity:1;fill-rule:evenodd;marker-start:url(#DotMX);fill-opacity:1;stroke:#ff0000;stroke-linecap:butt;stroke-width:1px;fill:none"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#DotM)"
-       d="M 165,447.36218 L 205,447.36218 L 205,437.36218 L 215,437.36218"
+       d="M 165,447.36218 L 215,447.36218"
        id="path9744"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-size:6px;font-style:normal;font-weight:normal;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="180.0714"
-       y="425.43362"
+       x="170"
+       y="435.57651"
        id="text13022"><tspan
          sodipodi:role="line"
          id="tspan13024"
-         x="180.0714"
-         y="425.43362">3.3v</tspan></text>
+         x="170"
+         y="435.57651">3.3v</tspan></text>
     <path
        style="stroke-linejoin:miter;marker-end:url(#DotMt);stroke-opacity:1;fill-rule:evenodd;marker-start:url(#DotMSK);stroke:#000097;stroke-linecap:butt;stroke-width:1px;fill:none"
        d="M 165,457.36218 L 215,457.36218"
@@ -838,16 +838,28 @@
        sodipodi:nodetypes="cc" />
     <path
        style="stroke-linejoin:miter;marker-end:url(#DotME);stroke-opacity:1;fill-rule:evenodd;marker-start:url(#DotMS);stroke:#00aa00;stroke-linecap:butt;stroke-width:1px;fill:none"
-       d="M 165,467.36218 L 190,467.36218 L 190,477.36218 L 215,477.36218"
+       d="M 165,467.36218 L 215,467.36218"
        id="path2531"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cc" />
     <path
        style="stroke-linejoin:miter;marker-end:url(#DotMe);stroke-opacity:1;fill-rule:evenodd;marker-start:url(#DotMG);stroke:#dd458e;stroke-linecap:butt;stroke-width:1px;fill:none"
-       d="M 165,477.36218 L 215,467.36218 L 215,467.36218 L 215,467.36218"
-       id="path2625" />
+       d="M 165,477.36218 L 215,477.36218"
+       id="path2625"
+       sodipodi:nodetypes="cc" />
     <path
-       style="stroke-linejoin:miter;marker-end:url(#DotM1);stroke-opacity:1;fill-rule:evenodd;marker-start:url(#DotMg);stroke:#aab400;stroke-linecap:butt;stroke-width:1px;marker-mid:none;fill:none"
-       d="M 165,427.36218 L 215,447.36218"
-       id="path2627" />
+       style="fill:none;fill-rule:evenodd;stroke:#aab400;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker-start:url(#DotMg);marker-mid:none;marker-end:url(#DotM1);stroke-opacity:1"
+       d="M 165,427.36218 L 215,427.36218"
+       id="path2627"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:6px;font-style:normal;font-weight:normal;fill:#aab400;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="170"
+       y="425.36218"
+       id="text2527"><tspan
+         sodipodi:role="line"
+         id="tspan2529"
+         x="170"
+         y="425.36218">3.3v</tspan></text>
   </g>
 </svg>
