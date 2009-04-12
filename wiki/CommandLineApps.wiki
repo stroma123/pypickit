@@ -2,15 +2,11 @@
 
 Pickit utilities:
 
-    <table>
-    <tr valign="top"><td>*pickitfwupdate*</td><td>Update the pickit's firmware using a Microchip-supplied firmware file</td></tr>
-    <tr valign="top"><td>*pickitfwversion*</td><td>Print the version of the pickit's firmware. </td></tr>
-    <tr valign="top"><td>*pickitreadieeprom*</td><td>Dump the contents of the pickit's internal data EEPROM.</td></tr>
-    </table>
+|| *pickitfwupdate* || Update the pickit's firmware using a Microchip-supplied firmware file. ||
+|| *pickitfwversion* || Print the version of the pickit's firmware. ||
+|| *pickitreadieeprom* || Dump the contents of the pickit's internal data EEPROM. ||
 
 SPI flash utilities:
 
-    <table>
-    <tr valign="top"><td>*readspiflash*</td><td>Read an SPI flash device connected to the pickit.</td></tr>
-    <tr valign="top"><td>*pickitfwversion*</td><td>Write an SPI flash device connected to the pickit.</td></tr>
-    </table>
+|| *readspiflash* || Read an SPI flash device connected to the pickit. ||
+|| *pickitfwversion* || Write an SPI flash device connected to the pickit. ||
