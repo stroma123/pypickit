@@ -2,7 +2,7 @@
 
 Currently there is only support for the Elantech eKT8210 touchpad in serial mode.
 
-This touchpad can operate in either serial (9600 8N1) or SPI mode (where the touchpad is an SPI master and generates a clock signal). Serial mode is selected by wiring the SS# and SCLK to ground.
+This touchpad can operate in either serial (9600 8N1) or SPI mode (where the touchpad is an SPI master and generates a clock signal). Serial mode is selected by wiring the SS# and SCK to ground.
 
 Example pickit/touchpad wiring diagram: 
 
