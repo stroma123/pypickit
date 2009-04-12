@@ -7,7 +7,7 @@ There are three classes in this library:
 || *!PicKit2* || The main pickit API for executing immediate operations. ||
 || *!PicKit2ScriptBuilder* || The !PicKit firmware actually implements a small virtual machine; this class allows scripts for this VM to be conveniently built. ||
 
-PicKit pinout:
+!PicKit pinout:
 
 http://pypickit.googlecode.com/svn/wiki/pickit.png
 _[http://pypickit.googlecode.com/svn/wiki/pickit.svg svg]_
