@@ -14,5 +14,6 @@ _[http://pypickit.googlecode.com/svn/wiki/pickit.svg svg]_
 ||Vpp||Programming voltage||
 ||Vdd||Supply voltage||
 ||GND||Ground||
-||SW1||Mouse button 1||
-||SW2||Mouse button 2||
+||DAT||I/O pin "DAT" - generally used as the main data pin||
+||CLK||I/O pin "CLK" - generally used as a clock pin||
+||AUX||I/O pin "AUX" - generally used as an auxiliary data pin||
