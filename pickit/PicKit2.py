@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import PicKit2ScriptBuilder
+import time
 
 class PicKit2():  
 
@@ -415,7 +416,7 @@ class PicKit2():
 		return ()
 
 	    # Read data
-	    tmp = self.__pickit.ReadData()
+	    tmp = self.ReadData()
 
 	    # Accumulate it, or delay for 1ms
 	    if len(tmp) > 0:
@@ -433,7 +434,7 @@ class PicKit2():
 
 	self.__checkmode(('NORMAL', ))
 	
-	timervalue = 0x10000 - int((self.FOSC/4/2.0)/baudrate)
+	timervalue = 0x10000 - int((self.FOSC/4/2.0)/baudrate)	
 	self.__transport.write((PicKit2.CMD_ENTER_UART_MODE, timervalue & 0xff, timervalue >> 8))
 
     def ExitUartMode(self):
