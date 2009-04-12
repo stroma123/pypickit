@@ -129,6 +129,9 @@ class PicKit2ScriptBuilder():
 
     ######################################## Vdd routing configuration ########################################
 
+    # Note: if you turn VddVoltage and VddGnd off, then you can SUPPLY an external voltage to the pickit on the 
+    # Vdd pin, and it will use it as the + logic level for the DAT/CLK/AUX pins.
+
     def VddVoltageOn(self):
 	"""Routes configured Vdd voltage out to VDD_TGT pin.
 
