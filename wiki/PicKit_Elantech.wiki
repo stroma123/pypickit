@@ -6,8 +6,8 @@ This touchpad can operate in either serial (9600 8N1) or SPI mode (where the tou
 
 Example pickit/touchpad wiring diagram: 
 
-http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.svg
-[http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.png SVG]
+http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.png
+[http://pypickit.googlecode.com/svn/wiki/pickit-touchpad.svg _svg_]
 
 ||Vdd||3.3v supply||
 ||GND||Ground||
