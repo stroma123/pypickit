@@ -41,33 +41,33 @@ class EKT8210():
 	pkttype = self.__pickit.BufferedReadData(1, timeout)
 	if len(pkttype) == 0:
 	    return ()
-	pkttype = ord(pkttype[0])
+	pkttype = pkttype[0]
 	
 	length = 0
-	if pkttype == ETECH_PKT_RELRPT:
+	if pkttype == self.ETECH_PKT_RELRPT:
 	    length = 4 
-	elif pkttype == ETECH_PKT_ABSRPT:
+	elif pkttype == self.ETECH_PKT_ABSRPT:
 	    length = 5
-	elif pkttype == ETECH_PKT_READREG_RESP:
+	elif pkttype == self.ETECH_PKT_READREG_RESP:
 	    length = 3
-	elif pkttype == ETECH_PKT_HELLO:
+	elif pkttype == self.ETECH_PKT_HELLO:
 	    length = 3
 	else:
 	    raise Exception("Unknown packet type 0x%02x" % pkttype)
 
-	data = (pkttype, ) + tuple([ord(x) for x in self.__pickit.BufferedReadData(length)])
+	data = (pkttype, ) + self.__pickit.BufferedReadData(length)
 	if (data[length] & 1) != 1:
 	    raise Exception("Bad sync bit")
 	    
 	return data
 
     def ReadRegister(self, reg):
-	self.__pickit.WriteData("".join([chr(x) for x in (ETECH_PKT_READREG_REQ, reg << 4, 0x00, 0x01)]))
+	self.__pickit.WriteData((self.ETECH_PKT_READREG_REQ, reg << 4, 0x00, 0x01))
 	
 	# Wait for appropriate response
 	while True:
 	    data = self.ReadNextPacket()
-	    if data[0] == ETECH_PKT_READREG_RESP:
+	    if data[0] == self.ETECH_PKT_READREG_RESP:
 	        break
 	
 	if (data[1] >> 4) != reg:
@@ -77,7 +77,7 @@ class EKT8210():
     def WriteRegister(self, reg, value):
 	reg = reg & 0xf
 	value = value & 0xffff  
-	self.__pickit.WriteData("".join([chr(x) for x in (ETECH_PKT_WRITEREG, (reg << 4 | value >> 12) & 0xff, (value >> 4) & 0xff, (value << 4 | 0x01) & 0xff)]))
+	self.__pickit.WriteData((self.ETECH_PKT_WRITEREG, (reg << 4 | value >> 12) & 0xff, (value >> 4) & 0xff, (value << 4 | 0x01) & 0xff))
 
     def GetFirmwareVersion(self):
 	tmp = self.ReadRegister(self.ETECH_REG_FIRMWAREVERSION)
