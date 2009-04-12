@@ -12,7 +12,7 @@ http://pypickit.googlecode.com/svn/wiki/pickit.png
 _[http://pypickit.googlecode.com/svn/wiki/pickit.svg svg]_
 
 ||Vpp||Programming voltage||
-||Vdd||Supply voltage _(Note: if you turn VddVoltage and VddGnd off, then you can SUPPLY an external voltage to the pickit on the Vdd pin, and it will use it as the + logic level for the DAT/CLK/AUX pins)_||
+||Vdd||Supply voltage _(Note: if you set !VddVoltageOff and !VddGndOff, then you can SUPPLY an external voltage to the pickit on the Vdd pin, and it will use it as the + logic level for the DAT/CLK/AUX pins)_||
 ||GND||Ground||
 ||DAT||I/O pin "DAT" - generally used as the main data pin||
 ||CLK||I/O pin "CLK" - generally used as a clock pin||
