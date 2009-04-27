@@ -111,9 +111,9 @@ class PicKit2():
         buf = self.__transport.command((PicKit2.CMD_GETVERSION, ))
 
         if buf[5] == ord('B'):
-        return ('BOOTLOADER', buf[6], buf[7])
+            return ('BOOTLOADER', buf[6], buf[7])
         else:
-        return ('NORMAL', buf[0], buf[1], buf[2])
+            return ('NORMAL', buf[0], buf[1], buf[2])
 
     def EnterBootloader(self):
         """Enter bootloader mode if not already in it."""
@@ -122,7 +122,7 @@ class PicKit2():
 
         if self.__mode != 'BOOTLOADER':
             buf = self.__transport.write((PicKit2.CMD_ENTERBOOTLOADER, ))
-            self.__mode = self.GetFirmwareVersion()[0]
+        self.__mode = self.GetFirmwareVersion()[0]
 
     def Reset(self):
         """Reset the PICKIT."""
