@@ -117,7 +117,7 @@ class CsrSpiPicKitTransport():
         rxdata2 = self.Read(address, count)
 
         if rxdata1 != rxdata2:
-        raise Exception("Read verification failed")
+            raise Exception("Read verification failed")
         
         return rxdata1
 
@@ -187,7 +187,7 @@ class CsrSpiPicKitTransport():
         rxdata = self.Read(address, count)
 
         if rxdata != data:
-        raise Exception("Write verification failed")
+            raise Exception("Write verification failed")
         
         return count
 
