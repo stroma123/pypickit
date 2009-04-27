@@ -82,45 +82,45 @@ class PicKit2ScriptBuilder():
 
 
     def __init__(self):
-	self.ClearScript()
-  
+        self.ClearScript()
+
     def __add__(self, other):
-	sb = PicKit2ScriptBuilder()
-	sb.__code = self.__code
-	sb.__labels = self.__labels
-	sb.__code += other.Code()
-	return sb
+        sb = PicKit2ScriptBuilder()
+        sb.__code = self.__code
+        sb.__labels = self.__labels
+        sb.__code += other.Code()
+        return sb
 
     def ClearScript(self):
-	"""Clear any accumulated code and labels."""
+        """Clear any accumulated code and labels."""
 
-	self.__code = ()
-	self.__labels = {}
+        self.__code = ()
+        self.__labels = {}
     
     def SetLabel(self, label):
-	"""Set a label at the current position in code."""
+        """Set a label at the current position in code."""
 
-	if label in self.__labels:
-	    raise Exception("Cannot change a label once it has been set")
-	self.__labels[label] = len(self.__code)
+        if label in self.__labels:
+            raise Exception("Cannot change a label once it has been set")
+        self.__labels[label] = len(self.__code)
 
     def Code(self):
-	"""Retrieved accumulated code."""
+        """Retrieved accumulated code."""
 
-	tmp = ()
-	for tok in self.__code:
-	    if type(tok) != tuple:
-		tmp += (tok, )
-		continue
-	    
-	    if tok[0] not in self.__labels:
-		raise Exception("Reference to unknown label %s" % tok[0])
-	    baseidx = len(tmp) + tok[1]
-	    tokidx = self.__labels[tok[0]]
+        tmp = ()
+        for tok in self.__code:
+            if type(tok) != tuple:
+                tmp += (tok, )
+                continue
+            
+            if tok[0] not in self.__labels:
+                raise Exception("Reference to unknown label %s" % tok[0])
+            baseidx = len(tmp) + tok[1]
+            tokidx = self.__labels[tok[0]]
 
-	    tmp += (-(tokidx - baseidx),  )
+            tmp += (-(tokidx - baseidx),  )
 
-	return tmp
+        return tmp
 
     
 
@@ -133,28 +133,28 @@ class PicKit2ScriptBuilder():
     # Vdd pin, and it will use it as the + logic level for the DAT/CLK/AUX pins.
 
     def VddVoltageOn(self):
-	"""Routes configured Vdd voltage out to VDD_TGT pin.
+        """Routes configured Vdd voltage out to VDD_TGT pin.
 
-	DO NOT TURN ON AT THE SAME TIME AS VddGndOn - WILL CAUSE A SHORT CIRCUIT!"""
+        DO NOT TURN ON AT THE SAME TIME AS VddGndOn - WILL CAUSE A SHORT CIRCUIT!"""
 
-	self.__code += (self.VDD_ON, )
+        self.__code += (self.VDD_ON, )
 
     def VddVoltageOff(self):
-	"""Stops routing configured Vdd voltage out to VDD_TGT pin."""
+        """Stops routing configured Vdd voltage out to VDD_TGT pin."""
 
-	self.__code += (self.VDD_OFF, )
+        self.__code += (self.VDD_OFF, )
 
     def VddGndOn(self):
-	"""Routes GND to VDD_TGT pin.
-	
-	DO NOT TURN ON AT THE SAME TIME AS VddOn - WILL CAUSE A SHORT CIRCUIT!"""
+        """Routes GND to VDD_TGT pin.
+        
+        DO NOT TURN ON AT THE SAME TIME AS VddOn - WILL CAUSE A SHORT CIRCUIT!"""
 
-	self.__code += (self.VDD_GND_ON, )
+        self.__code += (self.VDD_GND_ON, )
 
     def VddGndOff(self):
-	"""Stops routing GND to VDD_TGT pin."""
+        """Stops routing GND to VDD_TGT pin."""
 
-	self.__code += (self.VDD_GND_OFF, )
+        self.__code += (self.VDD_GND_OFF, )
 
 
 
@@ -162,34 +162,34 @@ class PicKit2ScriptBuilder():
     ######################################## Vpp routing configuration ########################################
 
     def VppVoltageOn(self):
-	"""Routes configured Vpp voltage out to VPP pin."""
+        """Routes configured Vpp voltage out to VPP pin."""
 
-	self.__code += (self.VPP_ON, )
+        self.__code += (self.VPP_ON, )
 
     def VppVoltageOff(self):
-	"""Stops routing configured Vpp voltage out to VPP pin."""
+        """Stops routing configured Vpp voltage out to VPP pin."""
 
-	self.__code += (self.VPP_OFF, )
+        self.__code += (self.VPP_OFF, )
 
     def VppGndOn(self):
-	"""Routes GND to VPP pin."""
+        """Routes GND to VPP pin."""
 
-	self.__code += (self.MCLR_GND_ON, )
+        self.__code += (self.MCLR_GND_ON, )
 
     def VppGndOff(self):
-	"""Stops routing GND to VPP pin."""
+        """Stops routing GND to VPP pin."""
 
-	self.__code += (self.MCLR_GND_OFF, )
+        self.__code += (self.MCLR_GND_OFF, )
 
     def VppPwmOn(self):
-	"""Enable Vpp PWM - Vpp will closely match configured voltage."""
+        """Enable Vpp PWM - Vpp will closely match configured voltage."""
 
-	self.__code += (self.VPP_PWM_ON, )
+        self.__code += (self.VPP_PWM_ON, )
 
     def VppPwmOff(self):
-	"""Disable Vpp PWM - Vpp will be ~3.3v."""
+        """Disable Vpp PWM - Vpp will be ~3.3v."""
 
-	self.__code += (self.VPP_PWM_OFF, )
+        self.__code += (self.VPP_PWM_OFF, )
 
 
 
@@ -199,43 +199,43 @@ class PicKit2ScriptBuilder():
     ######################################## GPIO pin support ########################################
 
     def ConfigureIcspPins(self, datpin_isinput, datpin_value, clkpin_isinput, clkpin_value):
-	"""Configure the ICSPCLK/ICSPDAT pins on the pickit connector."""
+        """Configure the ICSPCLK/ICSPDAT pins on the pickit connector."""
 
-	value = 0
-	value |= (0,1)[clkpin_isinput]
-	value |= (0,2)[datpin_isinput]
-	value |= (0,4)[clkpin_value]
-	value |= (0,8)[datpin_value]
-	self.__code += (self.SET_ICSP_PINS, value)
+        value = 0
+        value |= (0,1)[clkpin_isinput]
+        value |= (0,2)[datpin_isinput]
+        value |= (0,4)[clkpin_value]
+        value |= (0,8)[datpin_value]
+        self.__code += (self.SET_ICSP_PINS, value)
 
     def ConfigureAuxPin(self, auxpin_isinput, auxpin_value):
-	"""Configure the AUX pin on the pickit connector."""
+        """Configure the AUX pin on the pickit connector."""
 
-	tmp = 0
-	tmp |= (0,1)[auxpin_isinput]
-	tmp |= (0,2)[auxpin_value]
-	self.__code += (self.SET_AUX, tmp)
+        tmp = 0
+        tmp |= (0,1)[auxpin_isinput]
+        tmp |= (0,2)[auxpin_value]
+        self.__code += (self.SET_AUX, tmp)
 
     def ReadIcspPinState(self):
-	"""Saves the ICSP (ICSPCLK/ICSPDAT) pin states to the readbuffer.
-	
-	The stored byte will have bit 0 = clk_state, bit 1 = dat_state (only read if the pins are configured as inputs)."""
+        """Saves the ICSP (ICSPCLK/ICSPDAT) pin states to the readbuffer.
+        
+        The stored byte will have bit 0 = clk_state, bit 1 = dat_state (only read if the pins are configured as inputs)."""
 
-	self.__code += (self.ICSP_STATES_BUFFER, )
+        self.__code += (self.ICSP_STATES_BUFFER, )
 
     def ReadAuxPinState(self):
-	"""Saves the AUX pin state to the readbuffer.
-	
-	The stored byte will have bit 0 = aux_state (only read if the pin is configured as an input)."""
+        """Saves the AUX pin state to the readbuffer.
+        
+        The stored byte will have bit 0 = aux_state (only read if the pin is configured as an input)."""
 
-	self.__code += (self.AUX_STATE_BUFFER, )
+        self.__code += (self.AUX_STATE_BUFFER, )
 
     def MeasureIcspdatPinPulse(self):
-	"""Waits 700ms for low->high edge on the ICSPDAT pin, then times how long it stays high (max 700ms).
+        """Waits 700ms for low->high edge on the ICSPDAT pin, then times how long it stays high (max 700ms).
 
-	Pulse length is stored as a count of 21.333us increments as two bytes in the readbuffer (LOWBYTE then HIGHBYTE)."""
+        Pulse length is stored as a count of 21.333us increments as two bytes in the readbuffer (LOWBYTE then HIGHBYTE)."""
 
-	self.__code += (self.MEASURE_PULSE, )
+        self.__code += (self.MEASURE_PULSE, )
 
 
 
@@ -245,58 +245,58 @@ class PicKit2ScriptBuilder():
     ######################################## Miscellaneous ########################################
 
     def BusyLedOn(self):
-	"""Turn on the busy LED."""
+        """Turn on the busy LED."""
 
-	self.__code += (self.BUSY_LED_ON, )
+        self.__code += (self.BUSY_LED_ON, )
 
     def BusyLedOff(self):
-	"""Turn off the busy LED."""
+        """Turn off the busy LED."""
 
-	self.__code += (self.BUSY_LED_OFF, )
+        self.__code += (self.BUSY_LED_OFF, )
 
     def SetProgrammingSpeed(self, delay_count):
-	"""Sets the programming speed (see constants) - the specific "speed" depends on the programming method in use.
+        """Sets the programming speed (see constants) - the specific "speed" depends on the programming method in use.
 
-	=0 => fastest speed (i.e. minimum delay between operations)
-	>0 => number of delays between operations - (delay is speed * programming-specific-value)."""
+        =0 => fastest speed (i.e. minimum delay between operations)
+        >0 => number of delays between operations - (delay is speed * programming-specific-value)."""
 
-	self.__code += (self.SET_ICSP_SPEED, delay_count)
+        self.__code += (self.SET_ICSP_SPEED, delay_count)
 
     def PopWriteBuffer(self):
-	"""Pops (and discards) the next byte from the writebuffer."""
+        """Pops (and discards) the next byte from the writebuffer."""
 
-	self.__code += (self.POP_DOWNLOAD, )
+        self.__code += (self.POP_DOWNLOAD, )
 
     def PushWriteBuffer(self, value):
-	"""Pushes the given value to the writebuffer."""
+        """Pushes the given value to the writebuffer."""
 
-	self.__code += (self.CONST_WRITE_DL, value)
+        self.__code += (self.CONST_WRITE_DL, value)
 
     def LongDelay(self, count):
-	"""Delays for 5.46ms * count"""
+        """Delays for 5.46ms * count"""
 
-	if count > 255:
-	    raise Exception("Cannot LongDelay() for more than 255 ticks")
+        if count > 255:
+            raise Exception("Cannot LongDelay() for more than 255 ticks")
 
-	self.__code += (self.DELAY_LONG, count & 0xff)
+        self.__code += (self.DELAY_LONG, count & 0xff)
 
     def ShortDelay(self, count):
-	"""Delays for 42.7us * count"""
+        """Delays for 42.7us * count"""
 
-	if count > 255:
-	    raise Exception("Cannot LongDelay() for more than 255 ticks")
+        if count > 255:
+            raise Exception("Cannot LongDelay() for more than 255 ticks")
 
-	self.__code += (self.DELAY_SHORT, count & 0xff)
+        self.__code += (self.DELAY_SHORT, count & 0xff)
 
     def ReadSFR(self, address):
-	"""Reads a special function register (literally 0x0f00 + address) and stores its value in the readbuffer."""
+        """Reads a special function register (literally 0x0f00 + address) and stores its value in the readbuffer."""
 
-	self.__code += (self.PEEK_SFR, address)
+        self.__code += (self.PEEK_SFR, address)
 
     def WriteSFR(self, address, value):
-	"""Writes the given value to a special function register (literally 0x0f00 + address)."""
+        """Writes the given value to a special function register (literally 0x0f00 + address)."""
 
-	self.__code += (self.POKE_SFR, address, value)
+        self.__code += (self.POKE_SFR, address, value)
 
 
 
@@ -306,40 +306,40 @@ class PicKit2ScriptBuilder():
     ######################################## Script flow control ########################################
 
     def Repeat(self, label, repeatcount):
-	"""Jumps to label and executes code between that and the Repeat instruction repeatcount times."""
+        """Jumps to label and executes code between that and the Repeat instruction repeatcount times."""
 
-	if repeatcount > 256:
-	    raise Exception("Cannot Repeat() for more than 256 iterations")
+        if repeatcount > 256:
+            raise Exception("Cannot Repeat() for more than 256 iterations")
 
-	if repeatcount > 1:
-	    self.__code += (self.LOOP, (label, -1), repeatcount - 1)
+        if repeatcount > 1:
+            self.__code += (self.LOOP, (label, -1), repeatcount - 1)
 
     def RepeatBuffer(self, label):
-	"""Jumps to label and executes code between that and the Repeat instruction repeatcount times read from the writebuffer.
-	
-	repeatcount = (writebuffer[1] << 8) | writebuffer[0]."""
+        """Jumps to label and executes code between that and the Repeat instruction repeatcount times read from the writebuffer.
+        
+        repeatcount = (writebuffer[1] << 8) | writebuffer[0]."""
 
-	self.__code += (self.LOOPBUFFER, (label, -1))
+        self.__code += (self.LOOPBUFFER, (label, -1))
 
     def GotoIfEqual(self, label, value):
-	"""Jumps to a label if the last byte written to the readbuffer is equal to the given value."""
+        """Jumps to a label if the last byte written to the readbuffer is equal to the given value."""
 
-	self.__code += (self.IF_EQ_GOTO, value, (label, -2))
+        self.__code += (self.IF_EQ_GOTO, value, (label, -2))
 
     def GotoIfGreater(self, label, value):
-	"""Jumps to a label if the last byte written to the readbuffer is greater than the given value."""
+        """Jumps to a label if the last byte written to the readbuffer is greater than the given value."""
 
-	self.__code += (self.IF_GT_GOTO, value, (label, -2))
+        self.__code += (self.IF_GT_GOTO, value, (label, -2))
 
     def Goto(self, label):
-	"""Unconditionally jumps to the given label."""
+        """Unconditionally jumps to the given label."""
 
-	self.__code += (self.GOTO_INDEX, (label, -1))
+        self.__code += (self.GOTO_INDEX, (label, -1))
 
     def ExitScript(self):
-	"""Terminates execution of current script."""
+        """Terminates execution of current script."""
 
-	self.__code += (self.EXIT_SCRIPT, )
+        self.__code += (self.EXIT_SCRIPT, )
 
 
 
@@ -351,74 +351,74 @@ class PicKit2ScriptBuilder():
     ######################################## ICSP protocol support ########################################
 
     def IcspWriteByte(self, value):
-	"""Writes the given 8bit value out using ICSP, LSB first.
+        """Writes the given 8bit value out using ICSP, LSB first.
 
-	Bit protocol: set data, delay, clock high, delay, clock low."""
+        Bit protocol: set data, delay, clock high, delay, clock low."""
 
-	self.__code += (self.WRITE_BYTE_LITERAL, value)
+        self.__code += (self.WRITE_BYTE_LITERAL, value)
 
     def IcspWriteByteBuffer(self):
-	"""Writes the next 8bit byte on the writebuffer out using ICSP, LSB first.
+        """Writes the next 8bit byte on the writebuffer out using ICSP, LSB first.
 
-	Bit protocol: set data, delay, clock high, delay, clock low."""
+        Bit protocol: set data, delay, clock high, delay, clock low."""
 
-	self.__code += (self.WRITE_BYTE_BUFFER, )
+        self.__code += (self.WRITE_BYTE_BUFFER, )
 
     def IcspReadByteBuffer(self):
-	"""Reads an 8bit byte in using ICSP, LSB first, and stores it in the readbuffer.
+        """Reads an 8bit byte in using ICSP, LSB first, and stores it in the readbuffer.
 
-	Bit protocol: clock high, delay, read data, clock low, delay."""
+        Bit protocol: clock high, delay, read data, clock low, delay."""
 
-	self.__code += (self.READ_BYTE_BUFFER, )
+        self.__code += (self.READ_BYTE_BUFFER, )
 
     def IcspDiscardByte(self):
-	"""Reads an 8bit byte in using ICSP, LSB first, and discards it.
+        """Reads an 8bit byte in using ICSP, LSB first, and discards it.
 
-	Bit protocol: clock high, delay, read data, clock low, delay."""
+        Bit protocol: clock high, delay, read data, clock low, delay."""
 
-	self.__code += (self.READ_BYTE, )
+        self.__code += (self.READ_BYTE, )
 
     def IcspWriteBits(self, bitcount, value):
-	"""Writes bitcount bits of the given 8bit value out using ICSP, LSB first.
+        """Writes bitcount bits of the given 8bit value out using ICSP, LSB first.
 
-	Bit protocol: set data, delay, clock high, delay, clock low."""
+        Bit protocol: set data, delay, clock high, delay, clock low."""
 
-	self.__code += (self.WRITE_BITS_LITERAL, bitcount, value)
+        self.__code += (self.WRITE_BITS_LITERAL, bitcount, value)
 
     def IcspWriteBitsBuffer(self, bitcount):
-	"""Writes bitcount bits of the next 8bit byte on the writebuffer out using ICSP, LSB first.
+        """Writes bitcount bits of the next 8bit byte on the writebuffer out using ICSP, LSB first.
 
-	Bit protocol: set data, delay, clock high, delay, clock low."""
+        Bit protocol: set data, delay, clock high, delay, clock low."""
 
-	self.__code += (self.WRITE_BITS_BUFFER, bitcount)
+        self.__code += (self.WRITE_BITS_BUFFER, bitcount)
 
     def IcspReadBitsBuffer(self, bitcount):
-	"""Reads the next bitcount bits in using ICSP, LSB first, and stores them as a byte in the readbuffer.
+        """Reads the next bitcount bits in using ICSP, LSB first, and stores them as a byte in the readbuffer.
 
-	Bit protocol: clock high, delay, read data, clock low, delay."""
+        Bit protocol: clock high, delay, read data, clock low, delay."""
 
-	self.__code += (self.READ_BITS_BUFFER, bitcount)
+        self.__code += (self.READ_BITS_BUFFER, bitcount)
 
     def IcspDiscardBits(self, bitcount):
-	"""Reads the next bitcount bits in using ICSP, LSB first, and discards them.
+        """Reads the next bitcount bits in using ICSP, LSB first, and discards them.
 
-	Bit protocol: clock high, delay, read data, clock low, delay."""
+        Bit protocol: clock high, delay, read data, clock low, delay."""
 
-	self.__code += (self.READ_BITS, bitcount)
+        self.__code += (self.READ_BITS, bitcount)
 
     def IcspWriteBitsAlt(self, bitcount,  value):
-	"""Writes bitcount bits of the given 8bit value out using ICSP, LSB first using an alternative protocol.
+        """Writes bitcount bits of the given 8bit value out using ICSP, LSB first using an alternative protocol.
 
-	Bit protocol: set data, clock high, delay, clock low, delay."""
+        Bit protocol: set data, clock high, delay, clock low, delay."""
 
-	self.__code += (self.WRITE_BITS_LITERAL, bitcount, value)
+        self.__code += (self.WRITE_BITS_LITERAL, bitcount, value)
 
     def IcspWriteBitsBufferAlt(self, bitcount):
-	"""Writes bitcount bits of the next 8bit byte on the writebuffer out using ICSP, LSB first using an alternative protocol.
+        """Writes bitcount bits of the next 8bit byte on the writebuffer out using ICSP, LSB first using an alternative protocol.
 
-	Bit protocol: set data, clock high, delay, clock low, delay."""
+        Bit protocol: set data, clock high, delay, clock low, delay."""
 
-	self.__code += (self.WRITE_BITS_BUFFER, bitcount)
+        self.__code += (self.WRITE_BITS_BUFFER, bitcount)
 
 
 
@@ -429,34 +429,34 @@ class PicKit2ScriptBuilder():
     ######################################## I2C protocol support ########################################
 
     def I2cStart(self):
-	"""Creates an i2c start condition."""
+        """Creates an i2c start condition."""
 
-	self.__code += (self.I2C_START, )
+        self.__code += (self.I2C_START, )
 
     def I2cStop(self):
-	"""Creates an i2c stop condition."""
+        """Creates an i2c stop condition."""
 
-	self.__code += (self.I2C_STOP, )
+        self.__code += (self.I2C_STOP, )
 
     def I2cWriteByte(self, value):
-	"""Writes the given value using i2c."""
+        """Writes the given value using i2c."""
 
-	self.__code += (self.I2C_WR_BYTE_LIT, value)
+        self.__code += (self.I2C_WR_BYTE_LIT, value)
 
     def I2cWriteByteBuffer(self):
-	"""Writes the next value in the writebuffer using i2c."""
+        """Writes the next value in the writebuffer using i2c."""
 
-	self.__code += (self.I2C_WR_BYTE_BUF)
+        self.__code += (self.I2C_WR_BYTE_BUF)
 
     def I2cReadByteBufferAck(self):
-	"""Reads the next value using i2c, stores it in the readbuffer, and ACKs it."""
+        """Reads the next value using i2c, stores it in the readbuffer, and ACKs it."""
 
-	self.__code += (self.I2C_RD_BYTE_ACK)
+        self.__code += (self.I2C_RD_BYTE_ACK)
 
     def I2cReadByteBufferNack(self):
-	"""Reads the next value using i2c, stores it in the readbuffer, and NACKs it."""
+        """Reads the next value using i2c, stores it in the readbuffer, and NACKs it."""
 
-	self.__code += (self.I2C_RD_BYTE_NACK)
+        self.__code += (self.I2C_RD_BYTE_NACK)
 
 
 
@@ -467,29 +467,29 @@ class PicKit2ScriptBuilder():
     ######################################## SPI protocol support ########################################
 
     def SpiWriteByte(self, value):
-	"""Write the supplied value using SPI."""
+        """Write the supplied value using SPI."""
 
-	self.__code += (self.SPI_WR_BYTE_LIT, value)
+        self.__code += (self.SPI_WR_BYTE_LIT, value)
 
     def SpiWriteByteBuffer(self):
-	"""Write the next value in the writebuffer using SPI."""
+        """Write the next value in the writebuffer using SPI."""
 
-	self.__code += (self.SPI_WR_BYTE_BUF, )
+        self.__code += (self.SPI_WR_BYTE_BUF, )
 
     def SpiReadByteBuffer(self):
-	"""Read a value from SPI into the readbuffer."""
+        """Read a value from SPI into the readbuffer."""
 
-	self.__code += (self.SPI_RD_BYTE_BUF, )
+        self.__code += (self.SPI_RD_BYTE_BUF, )
 
     def SpiWriteReadByte(self, value):
-	"""Write the supplied value using SPI, while simultaneously reading a byte and storing it in the readbuffer"""
+        """Write the supplied value using SPI, while simultaneously reading a byte and storing it in the readbuffer"""
 
-	self.__code += (self.SPI_RDWR_BYTE_LIT, value)
+        self.__code += (self.SPI_RDWR_BYTE_LIT, value)
 
     def SpiWriteReadByteBuffer(self):
-	"""Write the next value in the writebuffer using SPI, while simultaneously reading a byte and storing it in the readbuffer"""
+        """Write the next value in the writebuffer using SPI, while simultaneously reading a byte and storing it in the readbuffer"""
 
-	self.__code += (self.SPI_RDWR_BYTE_BUF, value)
+        self.__code += (self.SPI_RDWR_BYTE_BUF, value)
 
 
 
@@ -498,14 +498,14 @@ class PicKit2ScriptBuilder():
     ######################################## UNI/O protocol support ########################################
 
     def UnioWrite(self, address, count):
-	"""Write count bytes from the writebuffer to the UNI/O  device at address."""
+        """Write count bytes from the writebuffer to the UNI/O  device at address."""
 
-	self.__code += (self.UNIO_TX, address, count)
+        self.__code += (self.UNIO_TX, address, count)
 
     def UnioWriteRead(self, address, txcount, rxcount):
-	"""Write txcount bytes from the writebuffer to the UNI/O device at address, then reads rxcount bytes and stores them in the readbuffer."""
+        """Write txcount bytes from the writebuffer to the UNI/O device at address, then reads rxcount bytes and stores them in the readbuffer."""
 
-	self.__code += (self.UNIO_TX_RX, address, txcount, rxcount)
+        self.__code += (self.UNIO_TX_RX, address, txcount, rxcount)
 
 
 
@@ -514,34 +514,34 @@ class PicKit2ScriptBuilder():
     ######################################## ICD protocol support ########################################
 
     def IcdReadByteBuffer(self):
-	"""Read a byte from an ICD slave and store in the readbuffer."""
+        """Read a byte from an ICD slave and store in the readbuffer."""
 
-	self.__code += (self.ICDSLAVE_RX)
+        self.__code += (self.ICDSLAVE_RX)
 
     def IcdWriteByte(self, value):
-	"""Write given value to an ICD slave."""
+        """Write given value to an ICD slave."""
 
-	self.__code += (self.ICDSLAVE_TX_LIT, value)
+        self.__code += (self.ICDSLAVE_TX_LIT, value)
 
     def IcdWriteByteBuffer(self):
-	"""Write next value from writebuffer to an ICD slave."""
+        """Write next value from writebuffer to an ICD slave."""
 
-	self.__code += (self.ICDSLAVE_TX_BUF, )
+        self.__code += (self.ICDSLAVE_TX_BUF, )
 
     def IcdReadByteBufferBaseline(self):
-	"""Read a byte from an ICD slave using the baseline handshake and store in the readbuffer."""
+        """Read a byte from an ICD slave using the baseline handshake and store in the readbuffer."""
 
-	self.__code += (self.ICDSLAVE_RX_BL, )
+        self.__code += (self.ICDSLAVE_RX_BL, )
 
     def IcdWriteByteBaseline(self, value):
-	"""Write given value to an ICD slave using the baseline handshake."""
+        """Write given value to an ICD slave using the baseline handshake."""
 
-	self.__code += (self.ICDSLAVE_TX_LIT_BL, value)
+        self.__code += (self.ICDSLAVE_TX_LIT_BL, value)
 
     def IcdWriteByteBufferBaseline(self):
-	"""Write next value from writebuffer to an ICD slave using the baseline handshake."""
+        """Write next value from writebuffer to an ICD slave using the baseline handshake."""
 
-	self.__code += (self.ICDSLAVE_TX_BUF_BL, )
+        self.__code += (self.ICDSLAVE_TX_BUF_BL, )
 
 
 
@@ -551,38 +551,38 @@ class PicKit2ScriptBuilder():
 
 
     def JtagWriteTMS(self, value, numbits):
-	"""Clocks out 'numbits' bits of 'value' on the JTAG TMS line, LSB first. 0 will be transmitted on TDI."""
+        """Clocks out 'numbits' bits of 'value' on the JTAG TMS line, LSB first. 0 will be transmitted on TDI."""
 
-	self.__code += (self.JT2_SETMODE, numbits, value)
+        self.__code += (self.JT2_SETMODE, numbits, value)
 
     def JtagWriteIR5(self, command):
-	"""Writes a 5 bit command to the JTAG Instruction Register using the Update-IR state."""
+        """Writes a 5 bit command to the JTAG Instruction Register using the Update-IR state."""
 
-	self.__code += (self.JT2_SENDCMD, command)
+        self.__code += (self.JT2_SENDCMD, command)
 
     def JtagWriteDR8(self, value):
-	"""Writes the 8 bit value to the JTAG Data Register using the Update-DR state, 
-	and stores the 8 bits received simultaneously to the readbuffer."""
+        """Writes the 8 bit value to the JTAG Data Register using the Update-DR state, 
+        and stores the 8 bits received simultaneously to the readbuffer."""
 
-	self.__code += (self.JT2_XFERDATA8_LIT, value)
+        self.__code += (self.JT2_XFERDATA8_LIT, value)
 
     def JtagWriteDR32(self, value):
-	"""Writes the 32 bit value to the JTAG Data Register using the Update-DR state, 
-	and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
+        """Writes the 32 bit value to the JTAG Data Register using the Update-DR state, 
+        and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-	self.__code += (self.JT2_XFERDATA32_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
+        self.__code += (self.JT2_XFERDATA32_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
 
     def JtagWritePauseDR32(self, value):
-	"""Writes the 32 bit value to the JTAG Data Register using the Pause-DR state, 
-	and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
+        """Writes the 32 bit value to the JTAG Data Register using the Pause-DR state, 
+        and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-	self.__code += (self.JT2_XFRFASTDAT_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
+        self.__code += (self.JT2_XFRFASTDAT_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
 
     def JtagWritePauseDR32Buffer(self):
-	"""Writes the next 32 bit value in the writebuffer (MSB|MID|MID|LSB) to the JTAG Data Register using the Pause-DR state, 
-	and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
+        """Writes the next 32 bit value in the writebuffer (MSB|MID|MID|LSB) to the JTAG Data Register using the Pause-DR state, 
+        and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-	self.__code += (self.JT2_XFRFASTDAT_BUF, )
+        self.__code += (self.JT2_XFRFASTDAT_BUF, )
 
 
 
@@ -590,67 +590,67 @@ class PicKit2ScriptBuilder():
     ######################################## Microchip-specific protocol support ########################################
 
     def Pic32XferInstructionBuffer(self):
-	"""Perform the Microchip specific Pic32 XferInstruction operation: 
-	Transfers the next 32 bits of data on the writebuffer (MSB|MID|MID|LSB) to the target and executes it."""
+        """Perform the Microchip specific Pic32 XferInstruction operation: 
+        Transfers the next 32 bits of data on the writebuffer (MSB|MID|MID|LSB) to the target and executes it."""
 
-	self.__code += (self.JT2_XFRFINST_BUF, )
+        self.__code += (self.JT2_XFRFINST_BUF, )
 
     def Pic32GetPEResponse(self):
-	"""Perform the Microchip specific Pic32 Get Programming Executive Response operation: 
-	Waits for the PE to return a response, and stores it received data in the readbuffer (MSB|MID|MID|LSB). 
-	The instruction (the last one transferred with XferInstruction?) is executed."""
+        """Perform the Microchip specific Pic32 Get Programming Executive Response operation: 
+        Waits for the PE to return a response, and stores it received data in the readbuffer (MSB|MID|MID|LSB). 
+        The instruction (the last one transferred with XferInstruction?) is executed."""
 
-	self.__code += (self.JT2_GET_PE_RESP, )
+        self.__code += (self.JT2_GET_PE_RESP, )
 
     def Pic32WaitPEResponse(self):
-	"""Perform the Microchip specific Pic32 Wait for Programming Executive Response operation: 
-	Waits for the PE to return a response, but does not actually store it anywhere. 
-	The instruction (the last one transferred with XferInstruction?) is executed."""
+        """Perform the Microchip specific Pic32 Wait for Programming Executive Response operation: 
+        Waits for the PE to return a response, but does not actually store it anywhere. 
+        The instruction (the last one transferred with XferInstruction?) is executed."""
 
-	self.__code += (self.JT2_WAIT_PE_RESP, )
+        self.__code += (self.JT2_WAIT_PE_RESP, )
 
     def Pic32WaitPEResponseNoExec(self):
-	"""Perform the Microchip specific Pic32 Wait for Programming Executive Response NoExec operation: 
-	Waits for the PE to return a response, but does not actually store it anywhere. 
-	It does not trigger execution of the instruction (the last one transferred with XferInstruction?)."""
+        """Perform the Microchip specific Pic32 Wait for Programming Executive Response NoExec operation: 
+        Waits for the PE to return a response, but does not actually store it anywhere. 
+        It does not trigger execution of the instruction (the last one transferred with XferInstruction?)."""
 
-	self.__code += (self.JT2_PE_PROG_RESPONSE, )
-
-
+        self.__code += (self.JT2_PE_PROG_RESPONSE, )
 
 
 
 
 
-  
+
+
+
     def CoreInst18(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def CoreInst24(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def Nop24(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def Visi24(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def RD2ByteBuffer(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def RD2BitsBuffer(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def WriteBufWordW(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
 
     def WriteBufByteW(self):
-	# FIXME
-	pass
+        # FIXME
+        pass
