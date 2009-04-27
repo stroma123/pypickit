@@ -84,7 +84,7 @@ class PicKit2LibUsbTransport():
                 if (device.idVendor == cls.USB_VENDOR) and (device.idProduct == cls.USB_DEVICE):
                     pickits += (device, )
 
-    return pickits
+        return pickits
 
 
 
