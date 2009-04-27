@@ -37,7 +37,7 @@ class PicKit2LibUsbTransport():
         self.__usb_handle = device.open()
         self.__usb_handle.setConfiguration(device.configurations[1])
         self.__usb_handle.claimInterface(device.configurations[1].interfaces[0][0])
-	self.usb_read_timeout = 5000                                               
+    self.usb_read_timeout = 5000                                               
         self.usb_write_timeout = 5000
 
     def __del__(self):
@@ -53,38 +53,38 @@ class PicKit2LibUsbTransport():
         if len(data) > self.USB_BLOCK_SIZE:
             raise UsbException("Cannot write more than %i bytes in one transmission" % self.USB_BLOCK_SIZE)
         if len(data) < self.USB_BLOCK_SIZE:
-	    data += (PicKit2.CMD_END_OF_BUFFER, )
+        data += (PicKit2.CMD_END_OF_BUFFER, )
         if len(data) < self.USB_BLOCK_SIZE:
             data += (PicKit2.CMD_NOP, ) * (self.USB_BLOCK_SIZE - len(data))
 
-	if self.__usb_handle.interruptWrite(self.__irqout, data, self.usb_write_timeout) != self.USB_BLOCK_SIZE:
+    if self.__usb_handle.interruptWrite(self.__irqout, data, self.usb_write_timeout) != self.USB_BLOCK_SIZE:
             raise UsbException(usb.USBError)
 
     def read(self, length = -1, timeout = -1):
-	if length == -1:
-	   length = self.USB_BLOCK_SIZE
-	if timeout == -1:
-	   timeout = self.usb_read_timeout
+    if length == -1:
+    length = self.USB_BLOCK_SIZE
+    if timeout == -1:
+    timeout = self.usb_read_timeout
 
-	buf = self.__usb_handle.interruptRead(self.__irqin, self.USB_BLOCK_SIZE, timeout)
-	if len(buf) != self.USB_BLOCK_SIZE:
+    buf = self.__usb_handle.interruptRead(self.__irqin, self.USB_BLOCK_SIZE, timeout)
+    if len(buf) != self.USB_BLOCK_SIZE:
             raise UsbException(usb.USBError)
-	return buf[:length]
+    return buf[:length]
 
     def command(self, data, rxlen = -1):
-	self.write(data)
-	return self.read(rxlen)
+    self.write(data)
+    return self.read(rxlen)
 
     @classmethod
     def findpickits(cls):
-	pickits = ()
+    pickits = ()
 
-      	for bus in usb.busses():
-	    for device in bus.devices:
-		if (device.idVendor == cls.USB_VENDOR) and (device.idProduct == cls.USB_DEVICE):
-		    pickits += (device, )
+        for bus in usb.busses():
+        for device in bus.devices:
+        if (device.idVendor == cls.USB_VENDOR) and (device.idProduct == cls.USB_DEVICE):
+            pickits += (device, )
 
-	return pickits
+    return pickits
 
 
 
@@ -95,4 +95,3 @@ class UsbException(Exception):
 
     def __str__(self):
         return "USBException(%s)" % repr(self.value)
-  
