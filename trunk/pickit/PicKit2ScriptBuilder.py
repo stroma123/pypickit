@@ -284,7 +284,7 @@ class PicKit2ScriptBuilder():
         """Delays for 42.7us * count"""
 
         if count > 255:
-            raise Exception("Cannot LongDelay() for more than 255 ticks")
+            raise Exception("Cannot ShortDelay() for more than 255 ticks")
 
         self.__code += (self.DELAY_SHORT, count & 0xff)
 
