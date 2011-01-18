@@ -56,15 +56,6 @@ class PicKit2():
     CMD_BOOT_WRITE_EEDATA 	= 0x05
     CMD_BOOT_RESET	 	= 0xFF
 
-    # FIXME: figure out calculation of these -- delete when verified
-#    UARTMODE_BAUDVALUE_300	= 0xB1F2
-#    UARTMODE_BAUDVALUE_1200	= 0xEC8A
-#    UARTMODE_BAUDVALUE_2400	= 0xF64E
-#    UARTMODE_BAUDVALUE_4800	= 0xFB30
-#    UARTMODE_BAUDVALUE_9600	= 0xFDA1
-#    UARTMODE_BAUDVALUE_19200	= 0xFEDA
-#    UARTMODE_BAUDVALUE_38400	= 0xFF76
-
     # Internal EEPROM locations
     IEEPROM_ADC_CAL_L       	= 0x00
     IEEPROM_ADC_CAL_H       	= 0x01
@@ -73,8 +64,15 @@ class PicKit2():
     IEEPROM_PK2GO_KEY1      	= 0x04
     IEEPRMO_PK2GO_KEY2      	= 0x05
     IEEPROM_PK2GO_KEY3      	= 0x06
-    IIEPROM_PK2GO_MEM       	= 0x07 # 0: 128K, 1: 256K
+    IIEPROM_PK2GO_MEM       	= 0x07 # One of EXT_EEPROM_SIZE_*
     IIEPROM_UNIT_ID         	= 0xF0 # 16 byte area for unit id
+
+    EXT_EEPROM_SIZE_128K		= 0
+    EXT_EEPROM_SIZE_256K		= 1
+
+    PK2GO_CHECKSUM_TYPE_STD		= 0
+    PK2GO_CHECKSUM_TYPE_FLASH	= 1
+    PK2GO_CHECKSUM_TYPE_EEPROM	= 2
 
     # Sizes of buffers on the PICKIT
     SIZE_SCRIPTBUFFER		= 768
@@ -314,9 +312,14 @@ class PicKit2():
         self.__transport.write((PicKit2.CMD_DOWNLOAD_SCRIPT, scriptid, len(script)) + script)
 
     def RunScript(self, scriptid, iterations = 1):
-        """Run the perviously uploaded script 'scriptid' from the pickit's scriptbuffer iterations times."""
+        """Run the perviously uploaded script 'scriptid' from the pickit's scriptbuffer iterations (max 256) times."""
 
         self.__checkmode(('NORMAL', 'PK2GOLEARN'))
+
+        if iterations == 0:
+                return
+        if iterations >= 256: # a value of 0 means 256 iterations
+                iterations  = 0
 
         self.__transport.write((PicKit2.CMD_RUN_SCRIPT, scriptid, iterations))
 
@@ -375,7 +378,7 @@ class PicKit2():
         self.__rxbuf = ()
 
     def CopyRamToReadBuffer(self, srcaddr):
-        """Copy 128 bytes of pickit RAM starting at srcaddr to the readbuffer."""
+        """Copy 128 bytes of pickit RAM starting at srcaddr to the readbuffer. Bits 15->12 are ignored."""
 
         self.__checkmode(('NORMAL', ))
 
@@ -433,8 +436,8 @@ class PicKit2():
         """Enter UART mode - lines will work as a serial UART with data format 8N1. Data will be automatically readfrom/writtento the writebuffer/readbuffer."""
 
         self.__checkmode(('NORMAL', ))
-        
-        timervalue = 0x10000 - int((self.FOSC/4/2.0)/baudrate)	
+
+        timervalue = 65536 - int(((1.0 / baudrate) - (3.0 / 1000000)) * (self.FOSC/4/2.0))
         self.__transport.write((PicKit2.CMD_ENTER_UART_MODE, timervalue & 0xff, timervalue >> 8))
 
     def ExitUartMode(self):
@@ -445,7 +448,10 @@ class PicKit2():
         self.__transport.write((PicKit2.CMD_EXIT_UART_MODE, ))
 
     def EnterPk2GoLearnMode(self, memsize):
-        """Enter the PK2GO learning mode - all commands will be stored in an external eeprom instead of being executed immediately."""
+        """Enter the PK2GO learning mode - all commands will be stored in an external eeprom instead of being executed immediately.
+        Args:
+        memsize 	is one of EXT_EEPROM_SIZE_*, and can be read from the internal EEPROM.
+        """
 
         self.__checkmode(('NORMAL', ))
 
@@ -461,7 +467,10 @@ class PicKit2():
         self.__mode = 'NORMAL'
 
     def EnterPk2GoMode(self, memsize):
-        """Enter the PK2GO runtime mode - the pickit will function as a stanalone programmer until the next time the GetFirmwareVersion command is executed."""
+    """Enter the PK2GO runtime mode - the pickit will function as a stanalone programmer until the next time the GetFirmwareVersion command is executed.
+        Args:
+        memsize 	is one of EXT_EEPROM_SIZE_*, and can be read from the internal EEPROM.
+        """
 
         self.__checkmode(('NORMAL', ))
 
@@ -502,6 +511,14 @@ class PicKit2():
         Returns: 1024 samples of data."""
 
         self.__checkmode(('NORMAL', ))
+        
+        if channeltriggermask != 0:
+            if triggercount == 0:
+                channeltriggermask = 0
+                channellevel = 0
+                channeledge = 0
+            if triggercount >= 256:
+                triggercount = 0 # a value of 0 means 256 counts
 
         self.__transport.write((PicKit2.CMD_LOGIC_ANALYZER_GO, 
                                 edgetriggertype & 1, 
@@ -516,19 +533,46 @@ class PicKit2():
         buf = self.__transport.read(2, 30000)
 
         # read and process the trigaddr
-        trigaddr = buf[0] | (buf[1] << 8) 
-        if trigaddr & 0x4000: # Was aborted
+        trigAddr = buf[0] | (buf[1] << 8)
+        if trigAddr & 0x4000: # Was aborted
             return
         upperdata = 0
-        if trigaddr & 0x8000:
+        if trigAddr & 0x8000:
             upperdata = 1
-        trigaddr = (trigaddr & 0xfff) + 1 # FIXME: why +1?
-        trigaddr -= 0x600
-        if trigaddr == 0x200:
-            triaddr = 0
+        trigAddr = (trigAddr & 0xfff) + 1
+        trigAddr -= 0x600
+        if trigAddr == 0x200:
+            trigAddr = 0
 
-        # FIXME: process the samples
-        pass
+        lasttriggersample = 1023 - (posttriggercount % 1024)
+        trigAddr += lasttriggersample / 2
+
+        if lasttriggersample & 1:
+            upperdata = !upperdata
+            if upperdata:
+                trigAddr += 1
+        trigAddr %= 512
+
+        # Read sample data from memory
+        data = []
+        for i in xrange(0, 512, 128):
+            self.CopyRamToReadBuffer(0x600 + i)
+            data += self.ReadData(skiplengthbyte=True)
+            data += self.ReadData(skiplengthbyte=True)
+
+        # Decode samples
+        result = []
+        for x in xrange(0, 1024):
+            tmp = data[trigAddr]
+            if upperdata:
+                trigAddr -= 1
+                if trigAddr < 0:
+                    trigAddr += 512
+                tmp = (tmp >> 4) + (tmp << 4)
+            result += (tmp & 0x1c) >> 2
+            upperdata = !upperdata
+
+        return result
 
     def SaveOscCal(self, address):
         """Read the OSCCAL register (at 'address') from the target device and store it for later."""
@@ -560,7 +604,8 @@ class PicKit2():
 
     def ResetChecksum(self, cktype):
         """Reset the checksum calculation. 
-        cktype indicates type of checksum - 0:standard, 1:flash, 2:eeprom."""
+		Args:
+        cktype is one of PK2GO_CHECKSUM_TYPE_*."""
 
         self.__checkmode(('PK2GOLEARN', ))
 
@@ -574,7 +619,9 @@ class PicKit2():
         self.__transport.write((PicKit2.CMD_VERIFY_CHECKSUM, checksum & 0xff, checksum >> 8))
 
     def ChangeChecksumType(self, cktype):
-        """Change the type of checksum being calculated - 0:standard, 1:flash, 2:eeprom."""
+        """Change the type of checksum being calculated.
+        Args:
+        cktype is one of PK2GO_CHECKSUM_TYPE_*."""
 
         self.__checkmode(('PK2GOLEARN', ))
 
