@@ -22,7 +22,7 @@
 ; *                  Min PGCx high or low time = 83ns
 ; *                  25 instruction cycles (including CALL & RETURN) = 2.1us
 ; *****************************************************************************/
- JTAG2W4PH:
+JTAG2W4PH:
       bsf     LATA, 3, 0      ;// CLK high phase 1
       bcf     LATA, 2, 0      ;// TDI = 0?
       btfsc   ASM_TEMP1_RAM, 0, 0 ;// Test for TDI value
@@ -66,7 +66,7 @@
 ; *
 ; * Note:            Use with an assembly CALL instruction.
 ; *****************************************************************************/
- ADQJTAG4W:
+ADQJTAG4W:
 		;  FIXME: implement
       return 
 
