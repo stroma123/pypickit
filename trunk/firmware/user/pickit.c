@@ -287,7 +287,8 @@ extern void ANALYZER_FALLING_1MHZ(void);
 extern void ANALYZER_SLOWRATE(void);
 void CopyRamUpload(unsigned char addrl, unsigned char addrh);
 
-int AdqGenericJtag(unsigned char *ptr);
+extern void ADQJTAG4W(void);
+void AdqGenericJtag(void);
 
 /** D E C L A R A T I O N S **************************************************/
 
@@ -2887,11 +2888,11 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
             _asm
                 bra ScriptIdxIncJumpEnd
             _endasm
+
 		caseADQ_GENERIC_JTAG:
-			scriptindex++;
-			scriptindex += AdqGenericJtag(*(scriptstart_ptr + scriptindex));
+			AdqGenericJtag();
             _asm
-                bra ScriptJumpEnd
+                bra ScriptIdxIncJumpEnd
             _endasm
                             
 	} // end;
@@ -5634,9 +5635,9 @@ void LogicAnalyzer(void)
 }
 
 /******************************************************************************
- * Function:        int AdqGenericJtag(unsigned char *ptr)
+ * Function:        void AdqGenericJtag()
  *
- * Overview:        Performs a generic JTAG transfer and transmits TDO when complete
+ * Overview:        Performs a generic 4 Wire JTAG transfer and transmits TDO contents when complete
  *
  * PreCondition:    
  *
@@ -5648,41 +5649,39 @@ void LogicAnalyzer(void)
  *
  * Note:            
  *****************************************************************************/
-int AdqGenericJtag(unsigned char *ptr)
+void AdqGenericJtag()
 {
-	int bitslefttotal;
-	int bitsleftcur = 0;
-	unsigned char *tdi;
-	unsigned char *tms;
-	unsigned char *tdo;
+	short bitslefttotal;
+	char bitsleftcur = -1;
+	unsigned char tdo;
 
-	bitslefttotal = *ptr;
-	tdi = ptr + 1;
-	tms = tdi + ((bitslefttotal + 7) / 8);
-	tdo = (unsigned char*) (outbuffer - 1);
-
+	bitslefttotal = ReadDownloadBuffer();
+	if (bitslefttotal == 0)
+		bitslefttotal = 256;
 	while(bitslefttotal-- > 0) {
 		// run out of bits in current byte? => move to next
-		if (bitsleftcur == 0) {
-		    asm_temp1 = *tdi++;
-		    asm_temp2 = *tms++;
-			tdo++;
-			*tdo = 0;
+		if (bitsleftcur <= 0) {
+			if (bitsleftcur == 0)
+				WriteUploadBuffer(tdo);
+
+		    asm_temp1 = ReadDownloadBuffer(); // TDI
+		    asm_temp2 = ReadDownloadBuffer(); // TMS
+			tdo = 0;
 			bitsleftcur = 8;
 		}
 
-		// FIXME: transmit the bit
+		ADQJTAG4W();
 
 		// update for next bit
 		asm_temp1 >>= 1;
 		asm_temp2 >>= 1;
-		*tdo <<= 1;
-		*tdo |= (asm_temp3 & 1);
+		tdo <<= 1;
+		tdo |= (asm_temp3 & 1);
+		bitsleftcur--;
 	}
 
-    USBHIDTxBlocking();
-
-	return 1 + (((*ptr + 7) / 8) * 2);
+	if (bitsleftcur != 8) 
+		WriteUploadBuffer(tdo);
 }
 
 /** EOF pickit.c *********************************************************/
