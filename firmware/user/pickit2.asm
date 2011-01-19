@@ -48,6 +48,31 @@
 
      GLOBAL JTAG2W4PH
 
+
+;/******************************************************************************
+; * Function:        ADQJTAG4W primitive
+; *
+; * Overview:        assembly primitive for generic JTAG
+; *
+; * PreCondition:    tris_ICSPCLK = 0 (output)
+; *                  ICSPCLK_out = 0 (low)
+; *
+; * Input:           ASM_TEMP1_RAM - TDI (output) value in bit 0
+; *                  ASM_TEMP2_RAM - TMS (output) value in bit 0
+; *
+; * Output:          ASM_TEMP3_RAM - TDO (input) value in bit 0
+; *
+; * Side Effects:    tris_ICSPDAT set to output, then to input
+; *
+; * Note:            Use with an assembly CALL instruction.
+; *****************************************************************************/
+ ADQJTAG4W:
+		;  FIXME: implement
+      return 
+
+     GLOBAL ADQJTAG4W
+
+
 ;/******************************************************************************
 ; * Function:        LOGICPREP 
 ; *
