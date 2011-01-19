@@ -288,7 +288,7 @@ extern void ANALYZER_SLOWRATE(void);
 void CopyRamUpload(unsigned char addrl, unsigned char addrh);
 
 extern void ADQJTAG4W(void);
-void AdqGenericJtag(void);
+void AdqGenericJtag(char writeOnly);
 
 /** D E C L A R A T I O N S **************************************************/
 
@@ -2117,7 +2117,7 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
 	{
         asm_temp1 = *(scriptstart_ptr + scriptindex); // script command
 
-        if (asm_temp1 < 0xB3)
+        if (asm_temp1 < 0xB1)
         {
             scriptindex = scriptlength;;
             continue;
@@ -2576,7 +2576,7 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
 
         ScriptJumpTable2:
 
-        asm_temp1 -= 0xB3;  // B3 now zero
+        asm_temp1 -= 0xB1;  // B1 now zero
         asm_temp1 *= 2;     // address is 2x value
         asm_temp1 += 8;     // adjust for address difference between PCL instr
 
@@ -2588,7 +2588,9 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
              btfsc     STATUS, 0, 0          // If a carry occurred 
              incf      PCLATH, 1, 0
              movwf     PCL, 0
-             bra       caseJT2_PE_PROG_RESP //0xB3 
+			 bra	   caseADQ_GENERIC_JTAG //0xB1
+			 bra	   caseADQ_GENERIC_JTAG_WO
+             bra       caseJT2_PE_PROG_RESP
              bra       caseJT2_WAIT_PE_RESP
              bra       caseJT2_GET_PE_RESP
              bra       caseJT2_XFERINST_BUF
@@ -2889,12 +2891,17 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
                 bra ScriptIdxIncJumpEnd
             _endasm
 
-		caseADQ_GENERIC_JTAG:
-			AdqGenericJtag();
+		caseADQ_GENERIC_JTAG_WO:
+			AdqGenericJtag(1);
             _asm
                 bra ScriptIdxIncJumpEnd
             _endasm
-                            
+
+		caseADQ_GENERIC_JTAG:
+			AdqGenericJtag(0);
+            _asm
+                bra ScriptIdxIncJumpEnd
+            _endasm
 	} // end;
 
 } //end void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
@@ -5649,7 +5656,7 @@ void LogicAnalyzer(void)
  *
  * Note:            
  *****************************************************************************/
-void AdqGenericJtag()
+void AdqGenericJtag(char writeOnly)
 {
 	short bitslefttotal;
 	char bitsleftcur = -1;
@@ -5661,7 +5668,7 @@ void AdqGenericJtag()
 	while(bitslefttotal-- > 0) {
 		// run out of bits in current byte? => move to next
 		if (bitsleftcur <= 0) {
-			if (bitsleftcur == 0)
+			if ((bitsleftcur == 0) && (!writeOnly))
 				WriteUploadBuffer(tdo);
 
 		    asm_temp1 = ReadDownloadBuffer(); // TDI
@@ -5680,7 +5687,7 @@ void AdqGenericJtag()
 		bitsleftcur--;
 	}
 
-	if (bitsleftcur != 8) 
+	if ((bitsleftcur != 8) && (!writeOnly))
 		WriteUploadBuffer(tdo);
 }
 

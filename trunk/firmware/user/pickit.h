@@ -235,7 +235,8 @@
 #define JT2_GET_PE_RESP     0xB5
 #define JT2_WAIT_PE_RESP    0xB4
 #define JT2_PE_PROG_RESP    0xB3
-#define ADQ_GENERIC_JTAG    0xA0
+#define ADQ_GENERIC_JTAG_WO 0xB2
+#define ADQ_GENERIC_JTAG    0xB1
 
 #define ACK_BYTE            0x00
 #define NO_ACK_BYTE         0x0F
