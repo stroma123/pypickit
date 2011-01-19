@@ -42,6 +42,7 @@
 #define MAJORVERSION    2
 #define MINORVERSION    32
 #define DOTVERSION      0
+#define ADQVERSION      1
 
 #define BUF_SIZE        64			// USB buffers
 
@@ -99,6 +100,7 @@
 //#define TRANSFER            't'     // Transfer n bytes to flash device
 //#define POWERCTRL           'V'     // Turn Vdd on/off; turn 5kHz square wave on/off
 #define GETVERSION          'v'     // Get firmware version number
+#define ADQ_GETVERSION      'w'     // Get ADQ firmware version number
 //#define WRITEPGM            'W'     // Write program memory
 //#define WRITEPGMEXT         'w'     // Write 1 word to program memory, externally timed
 //#define WRITE4WORDS         '4'     // Write 4 words to program memory
@@ -233,6 +235,7 @@
 #define JT2_GET_PE_RESP     0xB5
 #define JT2_WAIT_PE_RESP    0xB4
 #define JT2_PE_PROG_RESP    0xB3
+#define ADQ_GENERIC_JTAG    0xA0
 
 #define ACK_BYTE            0x00
 #define NO_ACK_BYTE         0x0F
