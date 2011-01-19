@@ -287,6 +287,8 @@ extern void ANALYZER_FALLING_1MHZ(void);
 extern void ANALYZER_SLOWRATE(void);
 void CopyRamUpload(unsigned char addrl, unsigned char addrh);
 
+int AdqGenericJtag(unsigned char *ptr);
+
 /** D E C L A R A T I O N S **************************************************/
 
 #pragma code pickitc = 0x202A
@@ -598,6 +600,14 @@ void ProcessIO(void)
                         EE_WriteByte(PK2GO_KEY2, 0xFF);
                         EE_WriteByte(PK2GO_KEY3, 0xFF);    
                     }
+                    usb_idx++;
+                    break;
+
+                case ADQ_GETVERSION:			// Get ADQ firmware version
+					// format: 		0x77
+					// response:	<version>
+					outbuffer[0] = ADQVERSION;
+				    USBHIDTxBlocking();
                     usb_idx++;
                     break;
 
@@ -2877,7 +2887,12 @@ void ScriptEngine(unsigned char *scriptstart_ptr, unsigned char scriptlength)
             _asm
                 bra ScriptIdxIncJumpEnd
             _endasm
-
+		caseADQ_GENERIC_JTAG:
+			scriptindex++;
+			scriptindex += AdqGenericJtag(*(scriptstart_ptr + scriptindex));
+            _asm
+                bra ScriptJumpEnd
+            _endasm
                             
 	} // end;
 
@@ -5616,6 +5631,58 @@ void LogicAnalyzer(void)
     // transmit results
     USBHIDTxBlocking();
 
+}
+
+/******************************************************************************
+ * Function:        int AdqGenericJtag(unsigned char *ptr)
+ *
+ * Overview:        Performs a generic JTAG transfer and transmits TDO when complete
+ *
+ * PreCondition:    
+ *
+ * Input:           
+ *
+ * Output:          None
+ *
+ * Side Effects:    None
+ *
+ * Note:            
+ *****************************************************************************/
+int AdqGenericJtag(unsigned char *ptr)
+{
+	int bitslefttotal;
+	int bitsleftcur = 0;
+	unsigned char *tdi;
+	unsigned char *tms;
+	unsigned char *tdo;
+
+	bitslefttotal = *ptr;
+	tdi = ptr + 1;
+	tms = tdi + ((bitslefttotal + 7) / 8);
+	tdo = (unsigned char*) (outbuffer - 1);
+
+	while(bitslefttotal-- > 0) {
+		// run out of bits in current byte? => move to next
+		if (bitsleftcur == 0) {
+		    asm_temp1 = *tdi++;
+		    asm_temp2 = *tms++;
+			tdo++;
+			*tdo = 0;
+			bitsleftcur = 8;
+		}
+
+		// FIXME: transmit the bit
+
+		// update for next bit
+		asm_temp1 >>= 1;
+		asm_temp2 >>= 1;
+		*tdo <<= 1;
+		*tdo |= (asm_temp3 & 1);
+	}
+
+    USBHIDTxBlocking();
+
+	return 1 + (((*ptr + 7) / 8) * 2);
 }
 
 /** EOF pickit.c *********************************************************/
