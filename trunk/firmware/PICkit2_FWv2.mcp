@@ -1,15 +1,16 @@
 [HEADER]
 magic_cookie={66E99B07-E706-4689-9E80-9B2582898A13}
 file_version=1.0
+device=PIC18F2550
 [PATH_INFO]
 BuildDirPolicy=BuildDirIsSourceDir
 dir_src=
-dir_bin=C:\PICkit_2\FirmwareV2\_output
-dir_tmp=C:\PICkit_2\FirmwareV2\_output
+dir_bin=C:\dev\pypickit-trunk\firmware\_output
+dir_tmp=C:\dev\pypickit-trunk\firmware\_output
 dir_sin=
-dir_inc=C:\PICkit_2\FirmwareV2;c:\mcc18\h
-dir_lib=C:\MCC18\lib
-dir_lkr=C:\PICkit_2\FirmwareV2
+dir_inc=C:\dev\pypickit-trunk\firmware;C:\mplab\MPLAB C18\h
+dir_lib=C:\mplab\MPLAB C18\lib
+dir_lkr=C:\dev\pypickit-trunk\firmware
 [CAT_FILTERS]
 filter_src=*.asm;*.c
 filter_inc=*.h;*.inc
@@ -51,7 +52,6 @@ file_024=.
 file_025=.
 file_026=.
 file_027=.
-file_028=.
 [GENERATED_FILES]
 file_000=no
 file_001=no
@@ -81,7 +81,6 @@ file_024=no
 file_025=no
 file_026=no
 file_027=no
-file_028=no
 [OTHER_FILES]
 file_000=no
 file_001=no
@@ -111,7 +110,6 @@ file_024=no
 file_025=no
 file_026=no
 file_027=no
-file_028=no
 [FILE_INFO]
 file_000=autofiles\usbdsc.c
 file_001=main.c
@@ -138,10 +136,9 @@ file_021=system\usb\usbmmap.h
 file_022=user\pickit.h
 file_023=user\pk_isr.h
 file_024=system\typedefs.h
-file_025=C:\MCC18\h\p18f2550.h
-file_026=user\pickit2.inc
-file_027=user\pk_prog2go.h
-file_028=PICkit2.lkr
+file_025=user\pickit2.inc
+file_026=user\pk_prog2go.h
+file_027=PICkit2.lkr
 [SUITE_INFO]
 suite_guid={5B7D72DD-9861-47BD-9F60-2BE967BF8416}
 suite_state=
