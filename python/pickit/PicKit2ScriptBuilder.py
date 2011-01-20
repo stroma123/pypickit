@@ -69,16 +69,16 @@ class PicKit2ScriptBuilder():
     MEASURE_PULSE       = 0xBF
     UNIO_TX             = 0xBE
     UNIO_TX_RX          = 0xBD
-    JT2_SETMODE         = 0xBC
-    JT2_SENDCMD         = 0xBB
-    JT2_XFERDATA8_LIT   = 0xBA
-    JT2_XFERDATA32_LIT  = 0xB9
-    JT2_XFRFASTDAT_LIT  = 0xB8
-    JT2_XFRFASTDAT_BUF  = 0xB7
-    JT2_XFERINST_BUF    = 0xB6
-    JT2_GET_PE_RESP     = 0xB5
-    JT2_WAIT_PE_RESP    = 0xB4
-    JT2_PE_PROG_RESP    = 0xB3
+    JT2W_SETMODE         = 0xBC
+    JT2W_SENDCMD         = 0xBB
+    JT2W_XFERDATA8_LIT   = 0xBA
+    JT2W_XFERDATA32_LIT  = 0xB9
+    JT2W_XFRFASTDAT_LIT  = 0xB8
+    JT2W_XFRFASTDAT_BUF  = 0xB7
+    JT2W_XFERINST_BUF    = 0xB6
+    JT2W_GET_PE_RESP     = 0xB5
+    JT2W_WAIT_PE_RESP    = 0xB4
+    JT2W_PE_PROG_RESP    = 0xB3
 
 
     def __init__(self):
@@ -544,72 +544,74 @@ class PicKit2ScriptBuilder():
         self.__code += (self.ICDSLAVE_TX_BUF_BL, )
 
 
+    ######################################## Generic 4Wire JTAG protocol support ########################################
+
+    def Jtag4W(self, numbits, tms, tdi):
+        # FIXME
+
+        self.__code += (self.JT2W_SETMODE, numbits, value)
 
 
 
-    ######################################## JTAG protocol support ########################################
+
+    ######################################## Microchip-specific 2Wire JTAG protocol support ########################################
 
 
-    def JtagWriteTMS(self, value, numbits):
+    def Jtag2WWriteTMS(self, value, numbits):
         """Clocks out 'numbits' bits of 'value' on the JTAG TMS line, LSB first. 0 will be transmitted on TDI."""
 
-        self.__code += (self.JT2_SETMODE, numbits, value)
+        self.__code += (self.JT2W_SETMODE, numbits, value)
 
-    def JtagWriteIR5(self, command):
+    def Jtag2WWriteIR5(self, command):
         """Writes a 5 bit command to the JTAG Instruction Register using the Update-IR state."""
 
-        self.__code += (self.JT2_SENDCMD, command)
+        self.__code += (self.JT2W_SENDCMD, command)
 
-    def JtagWriteDR8(self, value):
+    def Jtag2WWriteDR8(self, value):
         """Writes the 8 bit value to the JTAG Data Register using the Update-DR state, 
         and stores the 8 bits received simultaneously to the readbuffer."""
 
-        self.__code += (self.JT2_XFERDATA8_LIT, value)
+        self.__code += (self.JT2W_XFERDATA8_LIT, value)
 
-    def JtagWriteDR32(self, value):
+    def Jtag2WWriteDR32(self, value):
         """Writes the 32 bit value to the JTAG Data Register using the Update-DR state, 
         and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-        self.__code += (self.JT2_XFERDATA32_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
+        self.__code += (self.JT2W_XFERDATA32_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
 
-    def JtagWritePauseDR32(self, value):
+    def Jtag2WWritePauseDR32(self, value):
         """Writes the 32 bit value to the JTAG Data Register using the Pause-DR state, 
         and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-        self.__code += (self.JT2_XFRFASTDAT_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
+        self.__code += (self.JT2W_XFRFASTDAT_LIT, value >> 24, value >> 16, value >> 8, value & 0xff)
 
-    def JtagWritePauseDR32Buffer(self):
+    def Jtag2WWritePauseDR32Buffer(self):
         """Writes the next 32 bit value in the writebuffer (MSB|MID|MID|LSB) to the JTAG Data Register using the Pause-DR state, 
         and stores the 32 bits received simultaneously to the readbuffer (MSB|MID|MID|LSB)"""
 
-        self.__code += (self.JT2_XFRFASTDAT_BUF, )
+        self.__code += (self.JT2W_XFRFASTDAT_BUF, )
 
-
-
-
-    ######################################## Microchip-specific protocol support ########################################
-
-    def Pic32XferInstructionBuffer(self):
+    def Jtag2WPic32XferInstructionBuffer(self):
         """Perform the Microchip specific Pic32 XferInstruction operation: 
         Transfers the next 32 bits of data on the writebuffer (MSB|MID|MID|LSB) to the target and executes it."""
 
         self.__code += (self.JT2_XFRFINST_BUF, )
 
-    def Pic32GetPEResponse(self):
+    def Jtag2WPic32GetPEResponse(self):
         """Perform the Microchip specific Pic32 Get Programming Executive Response operation: 
         Waits for the PE to return a response, and stores it received data in the readbuffer (MSB|MID|MID|LSB). 
         The instruction (the last one transferred with XferInstruction?) is executed."""
 
         self.__code += (self.JT2_GET_PE_RESP, )
 
-    def Pic32WaitPEResponse(self):
+    def Jtag2WPic32WaitPEResponse(self):
         """Perform the Microchip specific Pic32 Wait for Programming Executive Response operation: 
         Waits for the PE to return a response, but does not actually store it anywhere. 
         The instruction (the last one transferred with XferInstruction?) is executed."""
 
         self.__code += (self.JT2_WAIT_PE_RESP, )
 
-    def Pic32WaitPEResponseNoExec(self):
+    def Jtag2WPic32WaitPEResponseNoExec(self):
         """Perform the Microchip specific Pic32 Wait for Programming Executive Response NoExec operation: 
         Waits for the PE to return a response, but does not actually store it anywhere. 
         It does not trigger execution of the instruction (the last one transferred with XferInstruction?)."""
