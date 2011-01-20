@@ -2,6 +2,69 @@
 import PicKit2ScriptBuilder
 import time
 
+# Pin configurations:
+
+# UART Mode:
+# Pin 1(Vpp): 
+# Pin 2(Vdd): Vdd 
+# Pin 3(GND): GND
+# Pin 4(DAT): RX (Pickit in)
+# Pin 5(CLK): TX (Pickit out)
+# Pin 6(AUX): 
+
+# Logic Analyser Mode:
+# Pin 1(Vpp): 
+# Pin 2(Vdd): Vdd Target
+# Pin 3(GND): Vss GND
+# Pin 4(DAT): Digital output or input (channel 1) (line has 4.7k pulldown)
+# Pin 5(CLK): Digital output or input (channel 2) (line has 4.7k pulldown)
+# Pin 6(AUX): Digital output or input (channel 3)
+
+# ICSP Mode:
+# Pin 1(Vpp): Vpp/ MCLR
+# Pin 2(Vdd): Vdd 
+# Pin 3(GND): GND
+# Pin 4(DAT): PGD
+# Pin 5(CLK): PGC
+# Pin 6(AUX): AUX
+
+# I2C Mode:
+# Pin 1(Vpp): 
+# Pin 2(Vdd): Vdd 
+# Pin 3(GND): Vss GND
+# Pin 4(DAT): 
+# Pin 5(CLK): SCL
+# Pin 6(AUX): SDA
+
+# SPI Mode:
+# Pin 1(Vpp): 
+# Pin 2(Vdd): Vdd 
+# Pin 3(GND): Vss GND
+# Pin 4(DAT): data in
+# Pin 5(CLK): clock
+# Pin 6(AUX): data out
+
+# UNI/O Mode: ?
+
+# ICD Mode: ?
+
+# Microchip 2wire JTAG Mode:
+# Pin 1(Vpp): 
+# Pin 2(Vdd): 
+# Pin 3(GND): GND
+# Pin 4(DAT): Data
+# Pin 5(CLK): Clock
+# Pin 6(AUX): 
+
+# 4wire Generic JTAG Mode: 
+# Pin 1(Vpp): TMS (pickit output)
+# Pin 2(Vdd):
+# Pin 3(GND): GND
+# Pin 4(DAT): TDI (pickit output)
+# Pin 5(CLK): TCK (pickit output)
+# Pin 6(AUX): TDO (pickit input)
+
+
 class PicKit2():  
 
     FOSC			= 48000000
