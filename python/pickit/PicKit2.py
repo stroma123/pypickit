@@ -530,7 +530,7 @@ class PicKit2():
         self.__mode = 'NORMAL'
 
     def EnterPk2GoMode(self, memsize):
-    """Enter the PK2GO runtime mode - the pickit will function as a stanalone programmer until the next time the GetFirmwareVersion command is executed.
+        """Enter the PK2GO runtime mode - the pickit will function as a stanalone programmer until the next time the GetFirmwareVersion command is executed.
         Args:
         memsize 	is one of EXT_EEPROM_SIZE_*, and can be read from the internal EEPROM.
         """
@@ -545,9 +545,9 @@ class PicKit2():
         edgetriggertype  	True for rising edge trigger, false for falling edge. Setting applies to all channels.
 
         channeltriggermask	Set a bit to enable a channel as a trigger, clear it to not trigger on that channel.
-                                bit 0: channel 1
-                                bit 1: channel 2
-                                bit 2: channel 3
+                                bit 0: channel 1 -- DAT
+                                bit 1: channel 2 -- CLK
+                                bit 2: channel 3 -- AUX
 
         channellevel		Set a bit for a high trigger, clear it for a low trigger.
                                 bit 0: channel 1
@@ -593,26 +593,27 @@ class PicKit2():
                                 posttriggercount >> 8,
                                 samplerate))
 
-        buf = self.__transport.read(2, 30000)
-
+        buf = self.__transport.read(10, 30000)
+ 
         # read and process the trigaddr
         trigAddr = buf[0] | (buf[1] << 8)
         if trigAddr & 0x4000: # Was aborted
             return
-        upperdata = 0
+        swapNibbles = False
         if trigAddr & 0x8000:
-            upperdata = 1
+            swapNibbles = True
         trigAddr = (trigAddr & 0xfff) + 1
         trigAddr -= 0x600
         if trigAddr == 0x200:
             trigAddr = 0
 
-        lasttriggersample = 1023 - (posttriggercount % 1024)
-        trigAddr += lasttriggersample / 2
+        lasttriggersample = 1023 - (posttriggercount % 1000)
+        trigAddr += (lasttriggersample / 2) + (posttriggercount/1000)*12
 
+        # adjust depending on oddness and swapNibbles flag
         if lasttriggersample & 1:
-            upperdata = !upperdata
-            if upperdata:
+            swapNibbles = not swapNibbles
+            if swapNibbles:
                 trigAddr += 1
         trigAddr %= 512
 
@@ -623,17 +624,21 @@ class PicKit2():
             data += self.ReadData(skiplengthbyte=True)
             data += self.ReadData(skiplengthbyte=True)
 
-        # Decode samples
+        # Decode samples into a simple array
         result = []
         for x in xrange(0, 1024):
             tmp = data[trigAddr]
-            if upperdata:
+            if swapNibbles:
                 trigAddr -= 1
                 if trigAddr < 0:
                     trigAddr += 512
-                tmp = (tmp >> 4) + (tmp << 4)
-            result += (tmp & 0x1c) >> 2
-            upperdata = !upperdata
+                tmp = (tmp >> 4) | (tmp << 4)
+            result += (((tmp & 0x1c) >> 2) & 7, )
+            swapNibbles = not swapNibbles
+
+        # Dunno why this occurs, but original has it, and it happens to me too.
+        # sometimes first sample seems bogus. Backfill with 2nd sample until fixed.
+        result[0] = result[1];
 
         return result
 
