@@ -23,9 +23,6 @@ pickit.ClearReadBuffer()
 pickit.ClearWriteBuffer()
 pickit.ClearScriptBuffer()
 
-pickit.SetVddVoltage(3.3, 0.5) # FIXME
-pickit.SetVppVoltage(3.3, 0.5) # FIXME
-
 # Disable pickit power lines and set data pins as inputs
 s = PicKit2ScriptBuilder()
 s.SetProgrammingSpeed(0)
@@ -33,10 +30,9 @@ s.ConfigureIcspPins(1,0,1,0)
 s.ConfigureAuxPin(1,0)
 s.VddGndOff()
 s.VddVoltageOff()
+s.VppVoltageOff()
 s.VppPwmOff()
 s.VppGndOff()
-s.VppVoltageOn() # FIXME
-s.VddVoltageOn() # FIXME
 pickit.RunScriptImmediate(s)
 
 def outputPin(sample, oldSample, bit):
