@@ -634,7 +634,8 @@ class PicKit2():
                 if trigAddr < 0:
                     trigAddr += 512
                 tmp = (tmp >> 4) | (tmp << 4)
-            result += (((tmp & 0x1c) >> 2) & 7, )
+            tmp = ((tmp & 0x1c) >> 2) & 7
+            result += (tmp, )
             swapNibbles = not swapNibbles
 
         # Dunno why this occurs, but original has it, and it happens to me too.
@@ -642,6 +643,28 @@ class PicKit2():
         result[0] = result[1];
 
         return result
+        
+    def LogicAnalyserSamplePeriodMHz(self, sampleRate):
+        if sampleRate == self.ANALYZER_SAMPLE_RATE_1MHZ:
+            return 1
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_500KHZ:
+            return 2
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_500KHZ:
+            return 2
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_250KHZ:
+            return 4
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_100KHZ:
+            return 10
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_50KHZ:
+            return 20
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_25KHZ:
+            return 40
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_10KHZ:
+            return 100
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_5KHZ:
+            return 200
+        elif sampleRate == self.ANALYZER_SAMPLE_RATE_1KHZ:
+            return 1000
 
     def SaveOscCal(self, address):
         """Read the OSCCAL register (at 'address') from the target device and store it for later."""
