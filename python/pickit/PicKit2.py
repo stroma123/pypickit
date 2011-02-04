@@ -564,7 +564,8 @@ class PicKit2():
         posttriggercount 	This mode always returns 1024 samples. The device actually records continually from when the mode is entered, 
                                 even though the trigger condition has not yet been met. 
 
-                                If the posttriggercount is > 1024, then only the final 1024 will be returned.
+                                If the posttriggercount is > 1024, then only the final 1024 will be returned. e.g. if you set this to 10000, 
+                                it will wait for the trigger, then take 10000 samples, but only return the final 1024.
 
                                 If the posttriggercount is < 1024, it will return "posttrigger" count samples from AFTER the trigger, the 
                                 remaining will be from those recorded before the trigger event occurred.
